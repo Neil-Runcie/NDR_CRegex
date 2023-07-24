@@ -7,6 +7,7 @@ typedef enum NDR_MatchResult {
 typedef struct NDR_RegexNode NDR_RegexNode;
 
 typedef struct NDR_Regex {
+    bool initialized;
     bool beginString;
     bool endString;
     bool isEmpty;

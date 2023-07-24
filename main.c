@@ -84,6 +84,27 @@ int main()
     NDR_Regex* test18 = malloc(sizeof(NDR_Regex));
     NDR_Regex* test19 = malloc(sizeof(NDR_Regex));
     NDR_Regex* test20 = malloc(sizeof(NDR_Regex));
+    NDR_InitRegex(test1);
+    NDR_InitRegex(test2);
+    NDR_InitRegex(test3);
+    NDR_InitRegex(test4);
+    NDR_InitRegex(test5);
+    NDR_InitRegex(test6);
+    NDR_InitRegex(test7);
+    NDR_InitRegex(test8);
+    NDR_InitRegex(test9);
+    NDR_InitRegex(test10);
+    NDR_InitRegex(test11);
+    NDR_InitRegex(test12);
+    NDR_InitRegex(test13);
+    NDR_InitRegex(test14);
+    NDR_InitRegex(test15);
+    NDR_InitRegex(test16);
+    NDR_InitRegex(test17);
+    NDR_InitRegex(test18);
+    NDR_InitRegex(test19);
+    NDR_InitRegex(test20);
+
     if(NDR_CompileRegex(test1, testRegex1) != 0){
         return 1;
     }
@@ -454,3 +475,5 @@ int main()
 
     return 0;
 }
+
+
