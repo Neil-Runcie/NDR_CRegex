@@ -10,4 +10,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 
 add_library(ndr_cregex STATIC src/ndr_regex.c)
 
-configure_file(${CMAKE_SOURCE_DIR}/src/ndr_cregex.h ${CMAKE_SOURCE_DIR}/include/ndr_cregex.h)
+configure_file(${CMAKE_SOURCE_DIR}/src/ndr_regex.h ${CMAKE_SOURCE_DIR}/include/ndr_regex.h)
