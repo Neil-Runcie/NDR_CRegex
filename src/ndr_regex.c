@@ -1,3 +1,40 @@
+
+/*********************************************************************************
+*                                     NDR CRegex                                 *
+**********************************************************************************/
+
+/*
+BSD 3-Clause License
+
+Copyright (c) 2023, Neil Runcie
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,6 +65,8 @@ typedef struct NDR_RegexNode {
     bool wordChar;
     bool notWordChar;
 
+    bool negatedClass;
+
     size_t numberOfChars;
     size_t memoryAllocated;
     char* acceptChars;
@@ -37,6 +76,12 @@ typedef struct NDR_RegexNode {
     struct NDR_RegexNode** children;
 
 } NDR_RegexNode;
+
+typedef struct NDR_RNodeStack{
+    NDR_RegexNode** nodes;
+    size_t memoryAllocated;
+    size_t numNodes;
+} NDR_RNodeStack;
 
 typedef struct NDR_RegexTracker {
     NDR_RegexNode* reference;
@@ -107,13 +152,13 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
     if(cRegex->initialized == true){
         NDR_DestroyRegex(cRegex);
         NDR_InitRegex(cRegex);
-        //free(cRegex->start);
     }
 
     // If the matching pattern is empty, set the flag and exit
     if(strcmp(regexString, "") == 0){
         cRegex->isEmpty = true;
         NDR_RemoveRNodeChild(cRegex->start);
+        cRegex->initialized = true;
         return 0;
     }
 
@@ -131,13 +176,11 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
     NDR_RNodeStack* endStack = malloc(sizeof(NDR_RNodeStack));
     NDR_InitRNodeStack(endStack);
     // Pushing the starting node into the start and end stack
-    //NDR_RegexNode* start1 = malloc(sizeof(NDR_RegexNode));
-    //NDR_InitRegexNode(cRegex->start->children[0]);
     NDR_RNodeStackPush(startStack, cRegex->start);
     NDR_RNodeStackPush(endStack, cRegex->start);
 
     // loop through each character in the regex string
-    for(size_t x = 0; x < strlen(regexString); x++){
+    for(int x = 0; x < strlen(regexString); x++){
 
         // If the escape character is found, set the state variables accordingly and go to the next iteration
         if(regexString[x] == '\\' && isCurrentlyEscaped == false){
@@ -156,7 +199,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
         }
         // Perform look ahead for use of the or operator '|' without a word following it
         else if(orJustSeen == true && regexString[x] != '(' ){
-            printf("Invalid use of '|' operator in regex at char %i. A parentheses enclosed \"word\" must follow the '|' symbol", x);
+            sprintf(cRegex->errorMessage, "Invalid use of '|' operator in regex at char %i. A parentheses enclosed \"word\" must follow the '|' symbol", x+1);
             NDR_DestroyRegexStack(startStack);
             NDR_DestroyRegexStack(endStack);
             free(startStack);
@@ -178,7 +221,6 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                     NDR_RNodeStackPeek(startStack)->orPath = true;
                 }
                 NDR_RNodeStackPush(endStack, NDR_RNodeStackPeek(startStack));
-                //NDR_InitRegexNode(NDR_RNodeStackPeek(endStack));
             }
             // When the special character ')' is seen, it is assumed to be the end of a "word"
             else if(regexString[x] == ')' && isCurrentlyEscaped == false && startedCharClass == false){
@@ -237,14 +279,13 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         while(follow != NDR_RNodeStackPeek(endStack)){
                             if(follow->orPath == true){
                                 NDR_AddRNodeChild(follow, holdStart->children[0]);
-                                // Need to free holdstart itself in this case
+
                                 follow = holdStart->children[0];
                                 while(follow->children[0] != holdEnd){
                                     follow = follow->children[0];
                                 }
                                 NDR_DestroyRegexNode(holdStart);
                                 free(holdStart);
-                                printf("RYHW %i  %i\n", holdEnd, follow->children[0]);
                                 NDR_DestroyRegexNode(follow->children[0]);
                                 free(follow->children[0]);
                                 follow->children[0] = NDR_RNodeStackPeek(endStack);
@@ -278,7 +319,6 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         NDR_RNodeStackPeek(startStack)->maxMatches = -1;
                         NDR_RNodeStackPeek(endStack)->minMatches = 0;
                         NDR_RNodeStackPeek(endStack)->maxMatches = -1;
-                        //ContinueAfterWord(startStack, endStack);
                         x++;
                     }
                     else if(regexString[x+1] == '+'){
@@ -288,19 +328,17 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         NDR_RNodeStackPeek(startStack)->maxMatches = -1;
                         NDR_RNodeStackPeek(endStack)->minMatches = 1;
                         NDR_RNodeStackPeek(endStack)->maxMatches = -1;
-                        //ContinueAfterWord(startStack, endStack);
                         x++;
                     }
                     else if(regexString[x+1] == '?'){
                         NDR_RNodeStackPeek(startStack)->optionalPath = true;
                         NDR_RNodeStackPeek(endStack)->optionalPath = true;
-                        //ContinueAfterWord(startStack, endStack);
                         x++;
                     }
                     else if(regexString[x+1] == '{'){
                         x++;
                         if(strlen(regexString) <= x+3){
-                            printf("Invalid numerator in regex at char %i", x);
+                            sprintf(cRegex->errorMessage, "Invalid numerator in regex at char %i", x+1);
                             NDR_DestroyRegexStack(startStack);
                             NDR_DestroyRegexStack(endStack);
                             free(startStack);
@@ -327,7 +365,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                                 repeatNum2[(i - ((x+1) + strlen(repeatNum1) + 1)) + 1] = '\0';
                             }
                             else{
-                                printf("Invalid numerator in regex at char %i. Numerators should either contain one number or two numbers separated by a comma %c", x, regexString[x]);
+                                sprintf(cRegex->errorMessage, "Invalid numerator in regex at char %i. Numerators should either contain one number or two numbers separated by a comma %c", x+1, regexString[x]);
                                 NDR_DestroyRegexStack(startStack);
                                 NDR_DestroyRegexStack(endStack);
                                 free(startStack);
@@ -352,7 +390,6 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         }
                         free(repeatNum1);
                         free(repeatNum2);
-                        //ContinueAfterWord(startStack, endStack);
                     }
 
                     ContinueAfterWord(startStack, endStack);
@@ -373,9 +410,15 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                     NDR_RNodeStackPush(endStack, NDR_RNodeStackPeek(startStack));
 
                     startedCharClass = true;
+
+                    if(strlen(regexString) > x+1){
+                        if(regexString[x+1] == '^'){
+                            NDR_RNodeStackPeek(endStack)->negatedClass = true;
+                        }
+                    }
                 }
                 else if(startedCharClass == true){
-                    printf("Invalid character class in regex at char %i", x+1);
+                    sprintf(cRegex->errorMessage, "Invalid character class in regex at char %i", x+1);
                     NDR_DestroyRegexStack(startStack);
                     NDR_DestroyRegexStack(endStack);
                     free(startStack);
@@ -385,7 +428,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
             }
             else if(regexString[x] == ']' && isCurrentlyEscaped == false){
                 if(startedCharClass == false){
-                    printf("Invalid character class in regex at char %i", x+1);
+                    sprintf(cRegex->errorMessage, "Invalid character class in regex at char %i", x+1);
                     NDR_DestroyRegexStack(startStack);
                     NDR_DestroyRegexStack(endStack);
                     free(startStack);
@@ -400,7 +443,6 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                             NDR_RNodeStackPeek(startStack)->maxMatches = -1;
                             NDR_RNodeStackPeek(endStack)->minMatches = 0;
                             NDR_RNodeStackPeek(endStack)->maxMatches = -1;
-                            //ContinueAfterWord(startStack, endStack);
                             x++;
                         }
                         else if(regexString[x+1] == '+'){
@@ -409,20 +451,18 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                             NDR_RNodeStackPeek(startStack)->maxMatches = -1;
                             NDR_RNodeStackPeek(endStack)->minMatches = 1;
                             NDR_RNodeStackPeek(endStack)->maxMatches = -1;
-                            //ContinueAfterWord(startStack, endStack);
                             x++;
                         }
                         else if(regexString[x+1] == '?'){
 
                             NDR_RNodeStackPeek(endStack)->minMatches = 0;
                             NDR_RNodeStackPeek(endStack)->maxMatches = 1;
-                            //ContinueAfterWord(startStack, endStack);
                             x++;
                         }
                         else if(regexString[x+1] == '{'){
                             x++;
                             if(strlen(regexString) <= x+3){
-                                printf("Invalid numerator in regex at char %i", x+1);
+                                sprintf(cRegex->errorMessage, "Invalid character class in regex at char %i", x+1);
                                 NDR_DestroyRegexStack(startStack);
                                 NDR_DestroyRegexStack(endStack);
                                 free(startStack);
@@ -431,7 +471,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                             }
                             // trying to repeat a nonexistent character is invalid
                             else if(NDR_RNodeStackPeek(endStack)->numberOfChars == 0){
-                                printf("Invalid numerator in regex at char %i", x+1);
+                                sprintf(cRegex->errorMessage, "Invalid character class in regex at char %i", x+1);
                                 NDR_DestroyRegexStack(startStack);
                                 NDR_DestroyRegexStack(endStack);
                                 free(startStack);
@@ -458,7 +498,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                                     repeatNum2[(i - ((x+1) + strlen(repeatNum1) + 1)) + 1] = '\0';
                                 }
                                 else{
-                                    printf("Invalid numerator in regex at char %i. Numerators should either contain one number or two numbers separated by a comma %c", x, regexString[x]);
+                                    sprintf(cRegex->errorMessage, "Invalid numerator in regex at char %i. Numerators should either contain one number or two numbers separated by a comma %c", x+1, regexString[x]);
                                     NDR_DestroyRegexStack(startStack);
                                     NDR_DestroyRegexStack(endStack);
                                     free(startStack);
@@ -483,20 +523,15 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                             free(repeatNum1);
                             free(repeatNum2);
                         }
-                        //else{
-                        //    ContinueAfterWord(startStack, endStack);
-                        //}
                     }
-                    //else{
-                    //    ContinueAfterWord(startStack, endStack);
-                    //}
+
                     ContinueAfterWord(startStack, endStack);
 
                     startedCharClass = false;
                 }
             }
             else if(regexString[x] == '{' && isCurrentlyEscaped == false && startedCharClass == false){
-                printf("Invalid '{' operator at char %i", x+1);
+                sprintf(cRegex->errorMessage, "Invalid '{' operator at char %i", x+1);
                 NDR_DestroyRegexStack(startStack);
                 NDR_DestroyRegexStack(endStack);
                 free(startStack);
@@ -504,7 +539,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                 return -1;
             }
             else if(regexString[x] == '}' && isCurrentlyEscaped == false && startedCharClass == false){
-                printf("Invalid numerator closing '}' at char %i", x+1);
+                sprintf(cRegex->errorMessage, "Invalid numerator closing '}' at char %i", x+1);
                 NDR_DestroyRegexStack(startStack);
                 NDR_DestroyRegexStack(endStack);
                 free(startStack);
@@ -512,7 +547,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                 return -1;
             }
             else if(regexString[x] == '?' && isCurrentlyEscaped == false && startedCharClass == false){
-                printf("Invalid '?' operator at char %i", x+1);
+                sprintf(cRegex->errorMessage, "Invalid '?' operator at char %i", x+1);
                 NDR_DestroyRegexStack(startStack);
                 NDR_DestroyRegexStack(endStack);
                 free(startStack);
@@ -520,7 +555,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                 return -1;
             }
             else if(regexString[x] == '*' && isCurrentlyEscaped == false && startedCharClass == false){
-                printf("Invalid '*' operator at char %i", x+1);
+                sprintf(cRegex->errorMessage, "Invalid '*' operator at char %i", x+1);
                 NDR_DestroyRegexStack(startStack);
                 NDR_DestroyRegexStack(endStack);
                 free(startStack);
@@ -528,7 +563,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                 return -1;
             }
             else if(regexString[x] == '+' && isCurrentlyEscaped == false && startedCharClass == false){
-                printf("Invalid '+' operator at char %i", x+1);
+                sprintf(cRegex->errorMessage, "Invalid '+' operator at char %i", x+1);
                 NDR_DestroyRegexStack(startStack);
                 NDR_DestroyRegexStack(endStack);
                 free(startStack);
@@ -536,7 +571,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                 return -1;
             }
             else if(regexString[x] == '|' && isCurrentlyEscaped == false && startedCharClass == false){
-                printf("The '|' \"or\" operator must be used after a parentheses enclosed \"word\" or it must be escaped for literal use");
+                sprintf(cRegex->errorMessage, "The '|' \"or\" operator at char %i must be used after a parentheses enclosed \"word\" or it must be escaped for literal use", x+1);
                 NDR_DestroyRegexStack(startStack);
                 NDR_DestroyRegexStack(endStack);
                 free(startStack);
@@ -548,8 +583,16 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                     if(regexString[x] == '-'){
                         NDR_AddRNodeChar(NDR_RNodeStackPeek(endStack), regexString[x]);
                     }
-                    else
-                        HandleSpecialCharacters(NDR_RNodeStackPeek(endStack), regexString[x]);
+                    else{
+                        if(HandleSpecialCharacters(NDR_RNodeStackPeek(endStack), regexString[x]) != 0){
+                            sprintf(cRegex->errorMessage, "Invalid special character %c at char %i", regexString[x], x+1);
+                            NDR_DestroyRegexStack(startStack);
+                            NDR_DestroyRegexStack(endStack);
+                            free(startStack);
+                            free(endStack);
+                            return -1;
+                        }
+                    }
                 }
                 else{
                     if(regexString[x] == '-'){
@@ -570,7 +613,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                             x++;
                         }
                         else{
-                            printf("invalid regex");
+                            sprintf(cRegex->errorMessage, "Invalid '-' operator at char %i", x+1);
                             NDR_DestroyRegexStack(startStack);
                             NDR_DestroyRegexStack(endStack);
                             free(startStack);
@@ -598,7 +641,14 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                 }
 
                 if(isCurrentlyEscaped == true){
-                    HandleSpecialCharacters(NDR_RNodeStackPeek(endStack), regexString[x]);
+                    if(HandleSpecialCharacters(NDR_RNodeStackPeek(endStack), regexString[x]) != 0){
+                        sprintf(cRegex->errorMessage, "Invalid special character %c at char %i", regexString[x], x+1);
+                        NDR_DestroyRegexStack(startStack);
+                        NDR_DestroyRegexStack(endStack);
+                        free(startStack);
+                        free(endStack);
+                        return -1;
+                    }
                 }
                 else if(regexString[x] == '.'){
                     NDR_RNodeStackPeek(endStack)->everything = true;
@@ -615,7 +665,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         NDR_RNodeStackPeek(startStack)->maxMatches = -1;
                         NDR_RNodeStackPeek(endStack)->minMatches = 0;
                         NDR_RNodeStackPeek(endStack)->maxMatches = -1;
-                        ContinueAfterWord(startStack, endStack);
+                        //ContinueAfterWord(startStack, endStack);
                         x++;
                     }
                     else if(regexString[x+1] == '+'){
@@ -624,20 +674,20 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         NDR_RNodeStackPeek(startStack)->maxMatches = -1;
                         NDR_RNodeStackPeek(endStack)->minMatches = 1;
                         NDR_RNodeStackPeek(endStack)->maxMatches = -1;
-                        ContinueAfterWord(startStack, endStack);
+                        //ContinueAfterWord(startStack, endStack);
                         x++;
                     }
                     else if(regexString[x+1] == '?'){
 
                         NDR_RNodeStackPeek(endStack)->minMatches = 0;
                         NDR_RNodeStackPeek(endStack)->maxMatches = 1;
-                        ContinueAfterWord(startStack, endStack);
+                        //ContinueAfterWord(startStack, endStack);
                         x++;
                     }
                     else if(regexString[x+1] == '{'){
                         x++;
                         if(strlen(regexString) <= x+3){
-                            printf("Invalid numerator in regex at char %i", x+1);
+                            sprintf(cRegex->errorMessage, "Invalid numerator in regex at char %i", x+1);
                             NDR_DestroyRegexStack(startStack);
                             NDR_DestroyRegexStack(endStack);
                             free(startStack);
@@ -646,7 +696,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         }
                         // trying to repeat a nonexistent character is invalid
                         else if(NDR_RNodeStackPeek(endStack)->numberOfChars == 0){
-                            printf("Invalid numerator in regex at char %i", x+1);
+                            sprintf(cRegex->errorMessage, "Invalid numerator in regex at char %i", x+1);
                             NDR_DestroyRegexStack(startStack);
                             NDR_DestroyRegexStack(endStack);
                             free(startStack);
@@ -673,7 +723,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                                 repeatNum2[(i - ((x+1) + strlen(repeatNum1) + 1)) + 1] = '\0';
                             }
                             else{
-                                printf("Invalid numerator in regex at char %i. Numerators should either contain one number or two numbers separated by a comma %c", x, regexString[x]);
+                                sprintf(cRegex->errorMessage, "Invalid numerator in regex at char %i. Numerators should either contain one number or two numbers separated by a comma %c", x+1, regexString[x]);
                                 NDR_DestroyRegexStack(startStack);
                                 NDR_DestroyRegexStack(endStack);
                                 free(startStack);
@@ -697,7 +747,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                         }
                         free(repeatNum1);
                         free(repeatNum2);
-                        ContinueAfterWord(startStack, endStack);
+                        //ContinueAfterWord(startStack, endStack);
                     }
 
                 }
@@ -714,6 +764,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
     }
 
 
+
     if(NDR_IsRNodeEmpty(NDR_RNodeStackPeek(endStack)) == false){
         NDR_InitRegexNode(NDR_RNodeStackPeek(endStack)->children[0]);
         NDR_RNodeStackPeek(endStack)->children[0]->end = true;
@@ -724,8 +775,26 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
         NDR_RemoveRNodeChild(NDR_RNodeStackPeek(endStack));
     }
 
-    NDR_RegexNode* x = cRegex->start;
-    /*printf("\n\nSTART\n");
+    if(startedCharClass == true){
+        sprintf(cRegex->errorMessage, "Invalid character class in regex");
+        NDR_DestroyRegexStack(startStack);
+        NDR_DestroyRegexStack(endStack);
+        free(startStack);
+        free(endStack);
+        return -1;
+    }
+    NDR_RNodeStackPop(endStack);
+    if(NDR_RNodeStackIsEmpty(endStack) == false){
+        sprintf(cRegex->errorMessage, "Invalid word in regex");
+        NDR_DestroyRegexStack(startStack);
+        NDR_DestroyRegexStack(endStack);
+        free(startStack);
+        free(endStack);
+        return -1;
+    }
+
+    /*NDR_RegexNode* x = cRegex->start;
+    printf("\n\nSTART\n");
     while(x->end != true){
         printf("AETH %i\n", x);
         x = x->children[0];
@@ -748,17 +817,21 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
 /// Compare a string to a pre-compiled regex graph
 NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
 
+    if(cRegex->initialized == false){
+        printf("Regex is not compiled yet\n");
+        return NDR_REGEX_FAILURE;
+    }
     // Compare the NDR_CharDescriptor** parts of NDR_Regex type to each consecutive character within the token string
 
     if(strcmp(token, "") == 0 && cRegex->isEmpty == true){
-        return COMPLETEMATCH;
+        return NDR_REGEX_COMPLETEMATCH;
     }
     else if(strcmp(token, "") == 0 || cRegex->isEmpty == true){
-        return NOMATCH;
+        return NDR_REGEX_NOMATCH;
     }
 
     // Setting match state variables for tracking the state during matching
-    NDR_MatchResult result = NOMATCH;
+    NDR_MatchResult result = NDR_REGEX_NOMATCH;
     int currentIndex = 0;
     int numTimesMatched = 0;
 
@@ -772,7 +845,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
         if(follow->end == true && cRegex->endString == true){
             NDR_DestroyRegexTrackerStack(wordReferences);
             free(wordReferences);
-            return NOMATCH;
+            return NDR_REGEX_NOMATCH;
         }
 
         while(follow->end != true){
@@ -813,9 +886,16 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
             if(IsCharacterAccepted(follow, token[i]) == true){
                 //printf("matched %c %c\n", token[i], follow->acceptChars[x]);
                 numTimesMatched++;
-                result = PARTIALMATCH;
+                result = NDR_REGEX_PARTIALMATCH;
 
                 if(numTimesMatched >= follow->minMatches){//printf("RYNJ7\n");
+                    if(numTimesMatched >= follow->maxMatches){
+                        if(follow->children[0]->end == true && strlen(token)-1 == i){
+                            NDR_DestroyRegexTrackerStack(wordReferences);
+                            free(wordReferences);
+                            return NDR_REGEX_COMPLETEMATCH;
+                        }
+                    }
                     if(numTimesMatched >= follow->maxMatches && follow->maxMatches != -1){
                         follow = follow->children[0];            //printf("ERTSHSYRJN %i\n", follow->wordEnd == true);
                         numTimesMatched = 0;
@@ -832,7 +912,6 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                 else if(numTimesMatched < follow->minMatches){//printf("RYNJ8\n");
                     i++;
                 }
-
 
             }
             else{
@@ -851,7 +930,6 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                             }
                             follow = follow->children[0];
                         //}
-
                         /*else{
                             continue;
                         }*/
@@ -863,7 +941,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                             if(NDR_TrackerStackIsEmpty(wordReferences) == true){
                                 NDR_DestroyRegexTrackerStack(wordReferences);
                                 free(wordReferences);
-                                return NOMATCH;
+                                return NDR_REGEX_NOMATCH;
                             }
                             else
                                 continue;
@@ -896,7 +974,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                             if(NDR_TrackerStackIsEmpty(wordReferences) == true){
                                 NDR_DestroyRegexTrackerStack(wordReferences);
                                 free(wordReferences);
-                                return NOMATCH;
+                                return NDR_REGEX_NOMATCH;
                             }
                             else
                                 continue;
@@ -924,7 +1002,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                             if(NDR_TrackerStackIsEmpty(wordReferences) == true){
                                 NDR_DestroyRegexTrackerStack(wordReferences);
                                 free(wordReferences);
-                                return NOMATCH;
+                                return NDR_REGEX_NOMATCH;
                             }
                             else
                                 continue;
@@ -949,7 +1027,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                     //printf("RYNJ5\n");
                     NDR_DestroyRegexTrackerStack(wordReferences);
                     free(wordReferences);
-                    return NOMATCH;
+                    return NDR_REGEX_NOMATCH;
                 }
                 else if(follow->minMatches > numTimesMatched){
                     //printf("RYNJ6\n");
@@ -959,7 +1037,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
                     while(NDR_TrackerStackIsEmpty(wordReferences) == false){
                         NDR_TrackerStackPop(wordReferences);
                     }
-                    result = NOMATCH;
+                    result = NDR_REGEX_NOMATCH;
                     //break;
                 }
                 else if(follow->minMatches <= numTimesMatched){// If matching and there is a failure to match after the min number of matches has been met then proceed to the next node and restart
@@ -988,7 +1066,7 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
         return result;
     }
 
-    return COMPLETEMATCH;
+    return NDR_REGEX_COMPLETEMATCH;
 }
 
 void ContinueAfterWord(NDR_RNodeStack* startStack, NDR_RNodeStack* endStack){
@@ -1109,6 +1187,9 @@ int HandleSpecialCharacters(NDR_RegexNode* node, char comp){
     else if(comp == '.'){
         NDR_AddRNodeChar(node, '.');
     }
+    else if(comp == '^'){
+        NDR_AddRNodeChar(node, '^');
+    }
     // Below are the special characters within the c language
     else if(comp == 'a'){
         NDR_AddRNodeChar(node, '\a');
@@ -1210,6 +1291,13 @@ bool IsCharacterAccepted(NDR_RegexNode* node, char comp){
         }
         else
             validChar = false;
+    }
+
+    if(node->negatedClass){
+        if(validChar == true)
+            validChar = false;
+        else
+            validChar = true;
     }
 
     return validChar;
@@ -1320,6 +1408,7 @@ void NDR_InitRegex(NDR_Regex* cRegex){
     cRegex->beginString = false;
     cRegex->endString = false;
     cRegex->isEmpty = false;
+    strcpy(cRegex->errorMessage, "");
     cRegex->start = malloc(sizeof(NDR_RegexNode));
     NDR_InitRegexNode(cRegex->start);
     cRegex->start->start = true;
@@ -1347,6 +1436,8 @@ void NDR_InitRegexNode(NDR_RegexNode* node){
     node->notWhiteSpace = false;
     node->wordChar = false;
     node->notWordChar = false;
+
+    node->negatedClass = false;
 
     node->numberOfChars = 0;
     node->memoryAllocated = 0;
@@ -1530,47 +1621,49 @@ void NDR_FreeRNodeStack(NDR_RNodeStack* ndrstack){
 
 void NDR_DestroyRegexGraph(NDR_Regex* head){
 
-    if(head != NULL){
-        size_t duplicatePostDepthTrackerCount = 0;
+    if(head->initialized == true){
+        if(head != NULL){
+            size_t duplicatePostDepthTrackerCount = 0;
 
-        NDR_RNodeStack* depthTracker = malloc(sizeof(NDR_RNodeStack));
-        NDR_InitRNodeStack(depthTracker);
-        NDR_RegexNode** duplicateTracker = malloc(sizeof(NDR_RegexNode*) * 1000);
-        NDR_RegexNode* follow = head->start;
+            NDR_RNodeStack* depthTracker = malloc(sizeof(NDR_RNodeStack));
+            NDR_InitRNodeStack(depthTracker);
+            NDR_RegexNode** duplicateTracker = malloc(sizeof(NDR_RegexNode*) * 1000);
+            NDR_RegexNode* follow = head->start;
 
-        NDR_RNodeStackPush(depthTracker, follow);
+            NDR_RNodeStackPush(depthTracker, follow);
 
-        size_t count;
-        while(!NDR_RNodeStackIsEmpty(depthTracker)){
-            count = 0;
-            while(count < follow->numberOfChildren){
-                if(!NDR_RNodeDuplicate(follow->children[count], duplicateTracker, duplicatePostDepthTrackerCount)){
-                    follow = follow->children[count];
-                    NDR_RNodeStackPush(depthTracker, follow);
-                    count = 0;
-                    continue;
+            size_t count;
+            while(!NDR_RNodeStackIsEmpty(depthTracker)){
+                count = 0;
+                while(count < follow->numberOfChildren){
+                    if(!NDR_RNodeDuplicate(follow->children[count], duplicateTracker, duplicatePostDepthTrackerCount)){
+                        follow = follow->children[count];
+                        NDR_RNodeStackPush(depthTracker, follow);
+                        count = 0;
+                        continue;
+                    }
+                    count++;
                 }
-                count++;
+
+                if(!NDR_RNodeDuplicate(follow, duplicateTracker, duplicatePostDepthTrackerCount)){
+                    duplicateTracker[duplicatePostDepthTrackerCount++] = (follow);
+                }
+
+                NDR_RNodeStackPop(depthTracker);
+
+                if(!NDR_RNodeStackIsEmpty(depthTracker))
+                    follow = NDR_RNodeStackPeek(depthTracker);
             }
 
-            if(!NDR_RNodeDuplicate(follow, duplicateTracker, duplicatePostDepthTrackerCount)){
-                duplicateTracker[duplicatePostDepthTrackerCount++] = (follow);
+            //NDR_FreeRNodeStack(depthTracker);
+            for(size_t x = 0; x < duplicatePostDepthTrackerCount; x++){
+                NDR_DestroyRegexNode(duplicateTracker[x]);
+                free(duplicateTracker[x]);
             }
-
-            NDR_RNodeStackPop(depthTracker);
-
-            if(!NDR_RNodeStackIsEmpty(depthTracker))
-                follow = NDR_RNodeStackPeek(depthTracker);
+            NDR_DestroyRegexStack(depthTracker);
+            free(depthTracker);
+            free(duplicateTracker);
         }
-
-        //NDR_FreeRNodeStack(depthTracker);
-        for(size_t x = 0; x < duplicatePostDepthTrackerCount; x++){
-            NDR_DestroyRegexNode(duplicateTracker[x]);
-            free(duplicateTracker[x]);
-        }
-        NDR_DestroyRegexStack(depthTracker);
-        free(depthTracker);
-        free(duplicateTracker);
     }
 
 }
