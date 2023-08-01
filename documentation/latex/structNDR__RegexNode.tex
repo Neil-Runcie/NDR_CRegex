@@ -1,0 +1,345 @@
+\hypertarget{structNDR__RegexNode}{}\doxysection{NDR\+\_\+\+Regex\+Node Struct Reference}
+\label{structNDR__RegexNode}\index{NDR\_RegexNode@{NDR\_RegexNode}}
+
+
+The regex node struct acts as the nodes within the regex graphs used for regular expression comparison.  
+
+
+
+
+{\ttfamily \#include $<$ndr\+\_\+regex.\+h$>$}
+
+
+
+Collaboration diagram for NDR\+\_\+\+Regex\+Node\+:
+% FIG 0
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_ad8e966d9b4b151f0f5d854f1b8feb0c1}{start}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_aba7dddf1744971f295c06f7617511526}{end}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a8a58fe912b9c570547bab9c1a45ae325}{optional\+Path}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a2d2a95a1bf5f4c7439d37db00f4b406e}{repeat\+Path}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a72116bbd78c41d2df122191738b42f56}{or\+Path}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_ad136b0ab361ff3b5c6b1ad99fa1bac58}{word\+Start}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a6b5d811601f29934cc68c137441f570b}{word\+End}}
+\item 
+int \mbox{\hyperlink{structNDR__RegexNode_ae555b052aa48a40a7da4f2f4fb4233dc}{min\+Matches}}
+\item 
+int \mbox{\hyperlink{structNDR__RegexNode_a9eae108e442dfa8059477abc305652fa}{max\+Matches}}
+\item 
+struct \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}} $\ast$ \mbox{\hyperlink{structNDR__RegexNode_a3778fa14d5486c4975119de646520549}{word\+Reference}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_ab38c5c694ef2a0e213205235e557ba23}{all\+But\+New\+Line}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a958c3b2fe1ed54abf7679a28fbc4c4cd}{everything}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a20079f2cf3a3a0569aa82e52ddf52190}{nothing}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_aa97e2ae01e11c9cc709066966496ec7f}{decimal\+Digit}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_aaace0e9d2525e8e19abca9207c91904e}{not\+Decimal\+Digit}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a39e4df8d247b447903cb3cf17a0e9f84}{white\+Space}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_ad75b60ea055cddacd6b931025314bca5}{not\+White\+Space}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a7e9d7dfd624b0d0217e7be7271827230}{word\+Char}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a83d997d80e04cc361482bfb443b8c504}{not\+Word\+Char}}
+\item 
+bool \mbox{\hyperlink{structNDR__RegexNode_a4114703c05afc2a25f5140c3ecc6ae0f}{negated\+Class}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structNDR__RegexNode_a432f9f2ab5e1805ac55c595583403937}{number\+Of\+Chars}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structNDR__RegexNode_a6aedaef130cfc65d95bfb3a7b9ebfd1a}{memory\+Allocated}}
+\item 
+char $\ast$ \mbox{\hyperlink{structNDR__RegexNode_a0ab035b6911fb8d00e8cb8ae28cb41dd}{accept\+Chars}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structNDR__RegexNode_a59a3dd8714beba2cdc4ed1f8d45df4d7}{number\+Of\+Children}}
+\item 
+size\+\_\+t \mbox{\hyperlink{structNDR__RegexNode_a4c83a316cf68cdaf9ca912025c028073}{memory\+Allocated\+Children}}
+\item 
+struct \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}} $\ast$$\ast$ \mbox{\hyperlink{structNDR__RegexNode_a4715f4616450acd7f4b81e07c9427667}{children}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The regex node struct acts as the nodes within the regex graphs used for regular expression comparison. 
+
+Definition at line 45 of file ndr\+\_\+regex.\+c.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structNDR__RegexNode_a0ab035b6911fb8d00e8cb8ae28cb41dd}\label{structNDR__RegexNode_a0ab035b6911fb8d00e8cb8ae28cb41dd}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!acceptChars@{acceptChars}}
+\index{acceptChars@{acceptChars}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{acceptChars}{acceptChars}}
+{\footnotesize\ttfamily char$\ast$ NDR\+\_\+\+Regex\+Node\+::accept\+Chars}
+
+
+
+Definition at line 72 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_ab38c5c694ef2a0e213205235e557ba23}\label{structNDR__RegexNode_ab38c5c694ef2a0e213205235e557ba23}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!allButNewLine@{allButNewLine}}
+\index{allButNewLine@{allButNewLine}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{allButNewLine}{allButNewLine}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::all\+But\+New\+Line}
+
+
+
+Definition at line 58 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a4715f4616450acd7f4b81e07c9427667}\label{structNDR__RegexNode_a4715f4616450acd7f4b81e07c9427667}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!children@{children}}
+\index{children@{children}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{children}{children}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}}$\ast$$\ast$ NDR\+\_\+\+Regex\+Node\+::children}
+
+
+
+Definition at line 76 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_aa97e2ae01e11c9cc709066966496ec7f}\label{structNDR__RegexNode_aa97e2ae01e11c9cc709066966496ec7f}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!decimalDigit@{decimalDigit}}
+\index{decimalDigit@{decimalDigit}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{decimalDigit}{decimalDigit}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::decimal\+Digit}
+
+
+
+Definition at line 61 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_aba7dddf1744971f295c06f7617511526}\label{structNDR__RegexNode_aba7dddf1744971f295c06f7617511526}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!end@{end}}
+\index{end@{end}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{end}{end}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::end}
+
+
+
+Definition at line 47 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a958c3b2fe1ed54abf7679a28fbc4c4cd}\label{structNDR__RegexNode_a958c3b2fe1ed54abf7679a28fbc4c4cd}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!everything@{everything}}
+\index{everything@{everything}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{everything}{everything}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::everything}
+
+
+
+Definition at line 59 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a9eae108e442dfa8059477abc305652fa}\label{structNDR__RegexNode_a9eae108e442dfa8059477abc305652fa}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!maxMatches@{maxMatches}}
+\index{maxMatches@{maxMatches}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{maxMatches}{maxMatches}}
+{\footnotesize\ttfamily int NDR\+\_\+\+Regex\+Node\+::max\+Matches}
+
+
+
+Definition at line 54 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a6aedaef130cfc65d95bfb3a7b9ebfd1a}\label{structNDR__RegexNode_a6aedaef130cfc65d95bfb3a7b9ebfd1a}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!memoryAllocated@{memoryAllocated}}
+\index{memoryAllocated@{memoryAllocated}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{memoryAllocated}{memoryAllocated}}
+{\footnotesize\ttfamily size\+\_\+t NDR\+\_\+\+Regex\+Node\+::memory\+Allocated}
+
+
+
+Definition at line 71 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a4c83a316cf68cdaf9ca912025c028073}\label{structNDR__RegexNode_a4c83a316cf68cdaf9ca912025c028073}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!memoryAllocatedChildren@{memoryAllocatedChildren}}
+\index{memoryAllocatedChildren@{memoryAllocatedChildren}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{memoryAllocatedChildren}{memoryAllocatedChildren}}
+{\footnotesize\ttfamily size\+\_\+t NDR\+\_\+\+Regex\+Node\+::memory\+Allocated\+Children}
+
+
+
+Definition at line 75 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_ae555b052aa48a40a7da4f2f4fb4233dc}\label{structNDR__RegexNode_ae555b052aa48a40a7da4f2f4fb4233dc}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!minMatches@{minMatches}}
+\index{minMatches@{minMatches}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{minMatches}{minMatches}}
+{\footnotesize\ttfamily int NDR\+\_\+\+Regex\+Node\+::min\+Matches}
+
+
+
+Definition at line 53 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a4114703c05afc2a25f5140c3ecc6ae0f}\label{structNDR__RegexNode_a4114703c05afc2a25f5140c3ecc6ae0f}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!negatedClass@{negatedClass}}
+\index{negatedClass@{negatedClass}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{negatedClass}{negatedClass}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::negated\+Class}
+
+
+
+Definition at line 68 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_aaace0e9d2525e8e19abca9207c91904e}\label{structNDR__RegexNode_aaace0e9d2525e8e19abca9207c91904e}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!notDecimalDigit@{notDecimalDigit}}
+\index{notDecimalDigit@{notDecimalDigit}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{notDecimalDigit}{notDecimalDigit}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::not\+Decimal\+Digit}
+
+
+
+Definition at line 62 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a20079f2cf3a3a0569aa82e52ddf52190}\label{structNDR__RegexNode_a20079f2cf3a3a0569aa82e52ddf52190}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!nothing@{nothing}}
+\index{nothing@{nothing}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{nothing}{nothing}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::nothing}
+
+
+
+Definition at line 60 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_ad75b60ea055cddacd6b931025314bca5}\label{structNDR__RegexNode_ad75b60ea055cddacd6b931025314bca5}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!notWhiteSpace@{notWhiteSpace}}
+\index{notWhiteSpace@{notWhiteSpace}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{notWhiteSpace}{notWhiteSpace}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::not\+White\+Space}
+
+
+
+Definition at line 64 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a83d997d80e04cc361482bfb443b8c504}\label{structNDR__RegexNode_a83d997d80e04cc361482bfb443b8c504}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!notWordChar@{notWordChar}}
+\index{notWordChar@{notWordChar}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{notWordChar}{notWordChar}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::not\+Word\+Char}
+
+
+
+Definition at line 66 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a432f9f2ab5e1805ac55c595583403937}\label{structNDR__RegexNode_a432f9f2ab5e1805ac55c595583403937}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!numberOfChars@{numberOfChars}}
+\index{numberOfChars@{numberOfChars}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{numberOfChars}{numberOfChars}}
+{\footnotesize\ttfamily size\+\_\+t NDR\+\_\+\+Regex\+Node\+::number\+Of\+Chars}
+
+
+
+Definition at line 70 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a59a3dd8714beba2cdc4ed1f8d45df4d7}\label{structNDR__RegexNode_a59a3dd8714beba2cdc4ed1f8d45df4d7}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!numberOfChildren@{numberOfChildren}}
+\index{numberOfChildren@{numberOfChildren}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{numberOfChildren}{numberOfChildren}}
+{\footnotesize\ttfamily size\+\_\+t NDR\+\_\+\+Regex\+Node\+::number\+Of\+Children}
+
+
+
+Definition at line 74 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a8a58fe912b9c570547bab9c1a45ae325}\label{structNDR__RegexNode_a8a58fe912b9c570547bab9c1a45ae325}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!optionalPath@{optionalPath}}
+\index{optionalPath@{optionalPath}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{optionalPath}{optionalPath}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::optional\+Path}
+
+
+
+Definition at line 48 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a72116bbd78c41d2df122191738b42f56}\label{structNDR__RegexNode_a72116bbd78c41d2df122191738b42f56}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!orPath@{orPath}}
+\index{orPath@{orPath}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{orPath}{orPath}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::or\+Path}
+
+
+
+Definition at line 50 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a2d2a95a1bf5f4c7439d37db00f4b406e}\label{structNDR__RegexNode_a2d2a95a1bf5f4c7439d37db00f4b406e}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!repeatPath@{repeatPath}}
+\index{repeatPath@{repeatPath}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{repeatPath}{repeatPath}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::repeat\+Path}
+
+
+
+Definition at line 49 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_ad8e966d9b4b151f0f5d854f1b8feb0c1}\label{structNDR__RegexNode_ad8e966d9b4b151f0f5d854f1b8feb0c1}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!start@{start}}
+\index{start@{start}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{start}{start}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::start}
+
+
+
+Definition at line 46 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a39e4df8d247b447903cb3cf17a0e9f84}\label{structNDR__RegexNode_a39e4df8d247b447903cb3cf17a0e9f84}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!whiteSpace@{whiteSpace}}
+\index{whiteSpace@{whiteSpace}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{whiteSpace}{whiteSpace}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::white\+Space}
+
+
+
+Definition at line 63 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a7e9d7dfd624b0d0217e7be7271827230}\label{structNDR__RegexNode_a7e9d7dfd624b0d0217e7be7271827230}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!wordChar@{wordChar}}
+\index{wordChar@{wordChar}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{wordChar}{wordChar}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::word\+Char}
+
+
+
+Definition at line 65 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a6b5d811601f29934cc68c137441f570b}\label{structNDR__RegexNode_a6b5d811601f29934cc68c137441f570b}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!wordEnd@{wordEnd}}
+\index{wordEnd@{wordEnd}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{wordEnd}{wordEnd}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::word\+End}
+
+
+
+Definition at line 52 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_a3778fa14d5486c4975119de646520549}\label{structNDR__RegexNode_a3778fa14d5486c4975119de646520549}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!wordReference@{wordReference}}
+\index{wordReference@{wordReference}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{wordReference}{wordReference}}
+{\footnotesize\ttfamily struct \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}}$\ast$ NDR\+\_\+\+Regex\+Node\+::word\+Reference}
+
+
+
+Definition at line 56 of file ndr\+\_\+regex.\+c.
+
+\mbox{\Hypertarget{structNDR__RegexNode_ad136b0ab361ff3b5c6b1ad99fa1bac58}\label{structNDR__RegexNode_ad136b0ab361ff3b5c6b1ad99fa1bac58}} 
+\index{NDR\_RegexNode@{NDR\_RegexNode}!wordStart@{wordStart}}
+\index{wordStart@{wordStart}!NDR\_RegexNode@{NDR\_RegexNode}}
+\doxysubsubsection{\texorpdfstring{wordStart}{wordStart}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+Node\+::word\+Start}
+
+
+
+Definition at line 51 of file ndr\+\_\+regex.\+c.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{ndr__regex_8c}{ndr\+\_\+regex.\+c}}\end{DoxyCompactItemize}
