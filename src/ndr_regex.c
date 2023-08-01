@@ -1,6 +1,6 @@
 
 /*********************************************************************************
-*                                     NDR CRegex                                 *
+*                                    NDR Regex                                   *
 **********************************************************************************/
 
 /*
@@ -40,68 +40,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+
+#include "ndr_regexnode.h"
 #include "ndr_regex.h"
+#include "ndr_regextracker.h"
 
-typedef struct NDR_RegexNode {
-    bool start;
-    bool end;
-    bool optionalPath;
-    bool repeatPath;
-    bool orPath;
-    bool wordStart;
-    bool wordEnd;
-    int minMatches;
-    int maxMatches;
 
-    struct NDR_RegexNode* wordReference;
 
-    bool allButNewLine;
-    bool everything;
-    bool nothing;
-    bool decimalDigit;
-    bool notDecimalDigit;
-    bool whiteSpace;
-    bool notWhiteSpace;
-    bool wordChar;
-    bool notWordChar;
-
-    bool negatedClass;
-
-    size_t numberOfChars;
-    size_t memoryAllocated;
-    char* acceptChars;
-
-    size_t numberOfChildren;
-    size_t memoryAllocatedChildren;
-    struct NDR_RegexNode** children;
-
-} NDR_RegexNode;
-
-typedef struct NDR_RNodeStack{
-    NDR_RegexNode** nodes;
-    size_t memoryAllocated;
-    size_t numNodes;
-} NDR_RNodeStack;
-
-typedef struct NDR_RegexTracker {
-    NDR_RegexNode* reference;
-    size_t numberOfRepeats;
-    size_t currentChild;
-    int stringPosition;
-} NDR_RegexTracker;
-
-typedef struct NDR_TrackerStack{
-    NDR_RegexTracker** references;
-    NDR_RegexTracker** disposal;
-    size_t memoryAllocated;
-    size_t numNodes;
-    size_t disposalMemoryAllocated;
-    size_t numDisposalNodes;
-} NDR_TrackerStack;
-
-void ContinueAfterWord(NDR_RNodeStack* startStack, NDR_RNodeStack* endStack);
-int HandleSpecialCharacters(NDR_RegexNode* node, char comp);
-bool IsCharacterAccepted(NDR_RegexNode* node, char comp);
 int checkAllButNewLine(char comp);
 int checkEverything(char comp);
 int checkDecimalDigit(char comp);
@@ -112,35 +57,7 @@ int checkWordChar(char comp);
 int checkNotWordChar(char comp);
 
 void NDR_InitRegex(NDR_Regex* cRegex);
-void NDR_InitRegexNode(NDR_RegexNode* node);
-bool NDR_IsRNodeEmpty(NDR_RegexNode* node);
-bool NDR_IsRNodeSetForComparison(NDR_RegexNode* node);
-void NDR_AddRNodeChar(NDR_RegexNode* node, char character);
-void NDR_AddRNodeChild(NDR_RegexNode* node, NDR_RegexNode* child);
-bool NDR_RNodeDuplicate(NDR_RegexNode* address, NDR_RegexNode** nodes, size_t index);
 
-void NDR_InitRNodeStack(NDR_RNodeStack* ndrstack);
-size_t NDR_RNodeStackSize(NDR_RNodeStack* ndrstack);
-bool NDR_RNodeStackIsEmpty(NDR_RNodeStack* ndrstack);
-void NDR_RNodeStackPush(NDR_RNodeStack* ndrstack, NDR_RegexNode* node);
-NDR_RegexNode* NDR_RNodeStackPeek(NDR_RNodeStack* ndrstack);
-NDR_RegexNode* NDR_RNodeStackPop(NDR_RNodeStack* ndrstack);
-void NDR_RNodeStackSet(NDR_RNodeStack* ndrstack, NDR_RegexNode* node);
-
-void NDR_InitRTracker(NDR_RegexTracker* ref, NDR_RegexNode* node);
-void NDR_InitTrackerStack(NDR_TrackerStack* ndrstack);
-size_t NDR_TrackerStackSize(NDR_TrackerStack* ndrstack);
-bool NDR_TrackerStackIsEmpty(NDR_TrackerStack* ndrstack);
-void NDR_TrackerStackPush(NDR_TrackerStack* ndrstack, NDR_RegexTracker* node);
-NDR_RegexTracker* NDR_TrackerStackPeek(NDR_TrackerStack* ndrstack);
-NDR_RegexTracker* NDR_TrackerStackPop(NDR_TrackerStack* ndrstack);
-
-
-void NDR_DestroyRegexNode(NDR_RegexNode* node);
-void NDR_DestroyRegexStack(NDR_RNodeStack* stack);
-void NDR_DestroyRegexTracker(NDR_RegexTracker* tracker);
-void NDR_DestroyRegexTrackerStack(NDR_TrackerStack* stack);
-void NDR_RemoveRNodeChild(NDR_RegexNode* node);
 void NDR_DestroyRegexGraph(NDR_Regex* head);
 
 
@@ -1069,53 +986,106 @@ NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token){
     return NDR_REGEX_COMPLETEMATCH;
 }
 
-void ContinueAfterWord(NDR_RNodeStack* startStack, NDR_RNodeStack* endStack){
-    /// Will need this commented code
-    NDR_RegexNode* holdStart = NDR_RNodeStackPop(startStack);
-    NDR_RegexNode* holdEnd = NDR_RNodeStackPop(endStack);
-    //NDR_RegexNode* follow = NDR_RNodeStackPeek(startStack);
 
-    free(NDR_RNodeStackPeek(endStack)->children[0]);
 
-    //NDR_AddRNodeChild(NDR_RNodeStackPeek(endStack), holdStart);
-    NDR_RNodeStackPeek(endStack)->children[0] = holdStart;
-    NDR_RNodeStackSet(endStack, holdEnd);
+int checkAllButNewLine(char comp){
+    char compare[] = {'\n'};
+    int length = 1;
 
-    /*if(NDR_RNodeStackPeek(startStack) == NDR_RNodeStackPeek(endStack) && NDR_IsRNodeEmpty(NDR_RNodeStackPeek(endStack)) == true){
-
-        free(NDR_RNodeStackPeek(startStack));
-        NDR_RNodeStackPop(startStack);
-        NDR_RNodeStackPop(endStack);
-        NDR_RNodeStackPush(startStack, holdStart);
-        NDR_RNodeStackPush(endStack, holdEnd);
-        //NDR_RNodeStackSet(startStack, holdStart);
-        //NDR_RNodeStackSet(endStack, holdEnd);
-
-    }
-    else if(NDR_RNodeStackPeek(startStack) == NDR_RNodeStackPeek(endStack)){
-
-        NDR_RNodeStackPeek(endStack)->children[0] = holdStart;
-        NDR_RNodeStackSet(endStack, holdEnd);
-    }
-    else{
-        if(NDR_IsRNodeEmpty(NDR_RNodeStackPeek(endStack)) == false){
-
-            NDR_RNodeStackPeek(endStack)->children[0] = holdStart;
-            NDR_RNodeStackSet(endStack, holdEnd);
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return -1;
         }
-        else{
-            while(follow->children[0] != NDR_RNodeStackPeek(endStack)){
-                follow = follow->children[0];
-            }
-            free(follow->children[0]);
-            follow->children[0] = holdStart;
-            NDR_RNodeStackSet(endStack, holdEnd);
-        }
+    }
 
-    }*/
-
+    return 0;
 }
 
+int checkEverything(char comp){
+    return 0;
+}
+
+int checkDecimalDigit(char comp){
+    char compare[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    int length = 10;
+
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+int checkNotDecimalDigit(char comp){
+    char compare[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    int length = 10;
+
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+int checkWhiteSpace(char comp){
+    char compare[] = {' ', '\t'};
+    int length = 2;
+
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+int checkNotWhiteSpace(char comp){
+    char compare[] = {' ', '\t'};
+    int length = 2;
+
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+int checkWordChar(char comp){
+    char compare[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_'};
+    int length = 63;
+
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return 0;
+        }
+    }
+
+    return -1;
+}
+
+int checkNotWordChar(char comp){
+    char compare[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_'};
+    int length = 63;
+
+    for(int i = 0; i < length; i++){
+        if(compare[i] == comp){
+            return -1;
+        }
+    }
+
+    return 0;
+}
 
 int HandleSpecialCharacters(NDR_RegexNode* node, char comp){
 
@@ -1303,105 +1273,6 @@ bool IsCharacterAccepted(NDR_RegexNode* node, char comp){
     return validChar;
 }
 
-int checkAllButNewLine(char comp){
-    char compare[] = {'\n'};
-    int length = 1;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
-int checkEverything(char comp){
-    return 0;
-}
-
-int checkDecimalDigit(char comp){
-    char compare[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    int length = 10;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return 0;
-        }
-    }
-
-    return -1;
-}
-
-int checkNotDecimalDigit(char comp){
-    char compare[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    int length = 10;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
-int checkWhiteSpace(char comp){
-    char compare[] = {' ', '\t'};
-    int length = 2;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return 0;
-        }
-    }
-
-    return -1;
-}
-
-int checkNotWhiteSpace(char comp){
-    char compare[] = {' ', '\t'};
-    int length = 2;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
-int checkWordChar(char comp){
-    char compare[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_'};
-    int length = 63;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return 0;
-        }
-    }
-
-    return -1;
-}
-
-int checkNotWordChar(char comp){
-    char compare[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '_'};
-    int length = 63;
-
-    for(int i = 0; i < length; i++){
-        if(compare[i] == comp){
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
 
 void NDR_InitRegex(NDR_Regex* cRegex){
     cRegex->initialized = false;
@@ -1414,209 +1285,8 @@ void NDR_InitRegex(NDR_Regex* cRegex){
     cRegex->start->start = true;
 }
 
-void NDR_InitRegexNode(NDR_RegexNode* node){
-    node->start = false;
-    node->end = false;
-    node->wordStart = false;
-    node->wordEnd = false;
-    node->optionalPath = false;
-    node->repeatPath = false;
-    node->orPath = false;
-    node->minMatches = 1;
-    node->maxMatches = 1;
-
-    node->wordReference = NULL;
-
-    node->allButNewLine = false;
-    node->everything = false;
-    node->nothing = false;
-    node->decimalDigit = false;
-    node->notDecimalDigit = false;
-    node->whiteSpace = false;
-    node->notWhiteSpace = false;
-    node->wordChar = false;
-    node->notWordChar = false;
-
-    node->negatedClass = false;
-
-    node->numberOfChars = 0;
-    node->memoryAllocated = 0;
-    //node->acceptChars = malloc(node->memoryAllocated);
-
-    node->numberOfChildren = 0;
-    node->memoryAllocatedChildren = 5;
-    node->children = malloc(sizeof(NDR_RegexNode*) * node->memoryAllocatedChildren);
-    NDR_RegexNode* newNode = malloc(sizeof(NDR_RegexNode));
-    NDR_AddRNodeChild(node, newNode);
-}
-
-void NDR_RemoveRNodeChild(NDR_RegexNode* node){
-    free(node->children[0]);
-    node->numberOfChildren--;
-    if(node->numberOfChildren == 0)
-        free(node->children);
-}
-
-bool NDR_IsRNodeEmpty(NDR_RegexNode* node){
-    if(node->start == false &&
-    node->end == false &&
-    node->wordStart == false &&
-    node->wordEnd == false &&
-    node->optionalPath == false &&
-    node->repeatPath == false &&
-    node->orPath == false &&
-    node->minMatches == 1 &&
-    node->maxMatches == 1 &&
-    node->wordReference == NULL &&
-    node->allButNewLine == false &&
-    node->everything == false &&
-    node->nothing == false &&
-    node->decimalDigit == false &&
-    node->notDecimalDigit == false &&
-    node->whiteSpace == false &&
-    node->notWhiteSpace == false &&
-    node->wordChar == false &&
-    node->notWordChar == false &&
-    node->numberOfChars == 0 &&
-    node->numberOfChildren == 1){
-        return true;
-    }
-    return false;
-}
-
-bool NDR_IsRNodeSetForComparison(NDR_RegexNode* node){
-    if(node->allButNewLine == true ||
-    node->everything == true ||
-    node->nothing == true ||
-    node->decimalDigit == true ||
-    node->notDecimalDigit == true ||
-    node->whiteSpace == true ||
-    node->notWhiteSpace == true ||
-    node->wordChar == true ||
-    node->notWordChar == true ||
-    node->numberOfChars > 0){
-        return true;
-    }
-    return false;
-}
-
-
-void NDR_AddRNodeChar(NDR_RegexNode* node, char character){
-    if(node->memoryAllocated == 0){
-        node->memoryAllocated = 20;
-        node->acceptChars = malloc(node->memoryAllocated);
-    }
-    else if(node->numberOfChars > node->memoryAllocated - 5){
-        node->memoryAllocated = node->memoryAllocated * 2;
-        node->acceptChars = realloc(node->acceptChars, node->memoryAllocated);
-    }
-    node->acceptChars[node->numberOfChars] = character;
-    node->numberOfChars++;
-}
-
-void NDR_AddRNodeChild(NDR_RegexNode* node, NDR_RegexNode* child){
-    if(node->numberOfChildren > node->memoryAllocatedChildren - 2){
-        node->memoryAllocatedChildren = node->memoryAllocatedChildren * 2;
-        node->children = realloc(node->children, sizeof(NDR_RegexNode*) * node->memoryAllocatedChildren);
-    }
-    node->children[node->numberOfChildren] = child;
-    node->numberOfChildren++;
-}
-
-bool NDR_RNodeDuplicate(NDR_RegexNode* address, NDR_RegexNode** nodes, size_t index){
-    for(size_t i = 0; i < index; i++){
-        if(address == nodes[i]){
-            return true;
-        }
-    }
-    return false;
-}
-
-// Utility function to initialize the stack
-void NDR_InitRNodeStack(NDR_RNodeStack* ndrstack){
-    ndrstack->memoryAllocated = 50;
-    ndrstack->nodes = malloc(ndrstack->memoryAllocated * sizeof(NDR_RegexNode*));
-    ndrstack->numNodes = 0;
-}
-
-// Utility function to return the size of the stack
-size_t NDR_RNodeStackSize(NDR_RNodeStack* ndrstack){
-    return ndrstack->numNodes;
-}
-
-// Utility function to check if the stack is empty or not
-bool NDR_RNodeStackIsEmpty(NDR_RNodeStack* ndrstack) {
-    return ndrstack->numNodes <= 0;
-}
-
-// Utility function to add an element `x` to the stack
-void NDR_RNodeStackPush(NDR_RNodeStack* ndrstack, NDR_RegexNode* node){
-    if(ndrstack->numNodes > ndrstack->memoryAllocated - 5){
-        ndrstack->memoryAllocated = ndrstack->memoryAllocated * 2;
-        ndrstack->nodes = realloc(ndrstack->nodes, sizeof(NDR_RegexNode*) * ndrstack->memoryAllocated);
-    }
-    ndrstack->nodes[ndrstack->numNodes++] = node;
-}
-
-NDR_RegexNode* NDR_RNodeStackPeek(NDR_RNodeStack* ndrstack){
-    if(NDR_RNodeStackIsEmpty(ndrstack))
-        return NULL;
-    else
-        return ndrstack->nodes[ndrstack->numNodes - 1];
-}
-
-
-NDR_RegexNode* NDR_RNodeStackPop(NDR_RNodeStack* ndrstack){
-    if (NDR_RNodeStackIsEmpty(ndrstack))
-        return NULL;
-    else
-        return ndrstack->nodes[--ndrstack->numNodes];
-}
-
-void NDR_RNodeStackSet(NDR_RNodeStack* ndrstack, NDR_RegexNode* node){
-    ndrstack->nodes[ndrstack->numNodes - 1] = node;
-}
-
-
-
-
-void NDR_DestroyRegexNode(NDR_RegexNode* node){
-    if(node->memoryAllocated > 0)
-        free(node->acceptChars);
-    if(node->numberOfChildren > 0)
-        free(node->children);
-}
-
-// Free the memory associated with items within the regex struct
 void NDR_DestroyRegex(NDR_Regex* graph){
     NDR_DestroyRegexGraph(graph);
-}
-
-void NDR_DestroyRegexStack(NDR_RNodeStack* stack){
-    free(stack->nodes);
-}
-
-void NDR_DestroyRegexTracker(NDR_RegexTracker* tracker){
-    free(tracker->reference);
-}
-
-void NDR_DestroyRegexTrackerStack(NDR_TrackerStack* stack){
-    for(int x = 0; x < stack->numDisposalNodes; x++){
-        free(stack->disposal[x]);
-    }
-
-    free(stack->references);
-    free(stack->disposal);
-}
-
-
-void NDR_FreeRNodeStack(NDR_RNodeStack* ndrstack){
-    for(size_t x = 0; x < ndrstack->numNodes; x++){
-
-        NDR_DestroyRegexNode(ndrstack->nodes[x]);
-        free(ndrstack->nodes[x]);
-    }
-    free(ndrstack->nodes);
 }
 
 void NDR_DestroyRegexGraph(NDR_Regex* head){
@@ -1666,75 +1336,4 @@ void NDR_DestroyRegexGraph(NDR_Regex* head){
         }
     }
 
-}
-
-
-
-
-
-void NDR_InitRTracker(NDR_RegexTracker* ref, NDR_RegexNode* node){
-    ref->reference = node;
-    ref->numberOfRepeats = 0;
-    ref->currentChild = 0;
-    ref->stringPosition = 0;
-}
-
-
-// Utility function to initialize the stack
-void NDR_InitTrackerStack(NDR_TrackerStack* ndrstack){
-    ndrstack->memoryAllocated = 50;
-    ndrstack->references = malloc(ndrstack->memoryAllocated * sizeof(NDR_RegexTracker*));
-    ndrstack->disposalMemoryAllocated = 50;
-    ndrstack->disposal = malloc(ndrstack->disposalMemoryAllocated * sizeof(NDR_RegexTracker*));
-    ndrstack->numNodes = 0;
-    ndrstack->numDisposalNodes = 0;
-}
-
-// Utility function to return the size of the stack
-size_t NDR_TrackerStackSize(NDR_TrackerStack* ndrstack){
-    return ndrstack->numNodes;
-}
-
-// Utility function to check if the stack is empty or not
-bool NDR_TrackerStackIsEmpty(NDR_TrackerStack* ndrstack) {
-    return ndrstack->numNodes <= 0;
-}
-
-// Utility function to add an element `x` to the stack
-void NDR_TrackerStackPush(NDR_TrackerStack* ndrstack, NDR_RegexTracker* node){
-    if(ndrstack->numNodes > ndrstack->memoryAllocated - 5){
-        ndrstack->memoryAllocated = ndrstack->memoryAllocated * 2;
-        ndrstack->references = realloc(ndrstack->references, sizeof(NDR_RegexTracker*) * ndrstack->memoryAllocated);
-    }
-    if(ndrstack->numNodes > ndrstack->disposalMemoryAllocated - 5){
-        ndrstack->disposalMemoryAllocated = ndrstack->disposalMemoryAllocated * 2;
-        ndrstack->references = realloc(ndrstack->references, sizeof(NDR_RegexTracker*) * ndrstack->disposalMemoryAllocated);
-    }
-    ndrstack->references[ndrstack->numNodes++] = node;
-    bool check = false;
-    for(int x = 0; x < ndrstack->numDisposalNodes; x++){
-        if(ndrstack->disposal[x] == node){
-            check = true;
-        }
-    }
-    if(check == false){
-        ndrstack->disposal[ndrstack->numDisposalNodes++] = node;
-    }
-}
-
-NDR_RegexTracker* NDR_TrackerStackPeek(NDR_TrackerStack* ndrstack){
-    if(NDR_TrackerStackIsEmpty(ndrstack))
-        return NULL;
-    else{
-        return ndrstack->references[ndrstack->numNodes - 1];
-    }
-}
-
-
-NDR_RegexTracker* NDR_TrackerStackPop(NDR_TrackerStack* ndrstack){
-    if (NDR_TrackerStackIsEmpty(ndrstack))
-        return NULL;
-    else{
-        return ndrstack->references[--ndrstack->numNodes];
-    }
 }

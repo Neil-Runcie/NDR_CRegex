@@ -8,6 +8,6 @@ project(NDR_LAP
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
 
-add_library(ndr_cregex STATIC src/ndr_regex.c)
+add_library(ndr_cregex STATIC src/ndr_regex.c src/ndr_regextracker.c src/ndr_regexnode.c)
 
 configure_file(${CMAKE_SOURCE_DIR}/src/ndr_regex.h ${CMAKE_SOURCE_DIR}/include/ndr_regex.h)

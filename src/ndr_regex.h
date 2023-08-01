@@ -1,6 +1,6 @@
 
 /*********************************************************************************
-*                                     NDR CRegex                                 *
+*                                    NDR Regex                                   *
 **********************************************************************************/
 
 /*
@@ -37,6 +37,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef NDRREGEX_H
 #define NDRREGEX_H
+
 
 /**
 * \enum NDR_MatchResult
