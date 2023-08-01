@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['children_147',['children',['../structNDR__RegexNode.html#a4715f4616450acd7f4b81e07c9427667',1,'NDR_RegexNode']]],
-  ['currentchild_148',['currentChild',['../structNDR__RegexTracker.html#ac732f25be07306ab804c10f622f8c825',1,'NDR_RegexTracker']]]
+  ['initialized_28',['initialized',['../structNDR__Regex.html#a133e0510c10ed5642d57b1fa40b95fd9',1,'NDR_Regex']]],
+  ['isempty_29',['isEmpty',['../structNDR__Regex.html#a9f023a9a7b8e76b28ed8c16fd6203358',1,'NDR_Regex']]]
 ];

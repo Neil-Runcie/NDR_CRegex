@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['acceptchars_144',['acceptChars',['../structNDR__RegexNode.html#a0ab035b6911fb8d00e8cb8ae28cb41dd',1,'NDR_RegexNode']]],
-  ['allbutnewline_145',['allButNewLine',['../structNDR__RegexNode.html#ab38c5c694ef2a0e213205235e557ba23',1,'NDR_RegexNode']]]
+  ['beginstring_25',['beginString',['../structNDR__Regex.html#ac72678ba24668b48c9eb21409eee1650',1,'NDR_Regex']]]
 ];
