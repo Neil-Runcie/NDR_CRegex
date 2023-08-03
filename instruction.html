@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="NDR Lexer and Parser Documentation">
+    <meta name="author" content="Neil Runcie"> 
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="instructionstyle.css" >
+
+
+</head>
+<body>
+    <div style="width: 70%; margin: auto">
+        <div class="tab">
+          <button class="tabs" onclick="MainDoc()">NDR CRegex</button>
+          <button class="tabs" onclick="SpecDoc()">Pattern Specifications</button>
+          <button class="tabs" onclick="LicenseDoc()">License</button>
+        </div>
+        <div id="mainDiv" style="display: block;">
+            <br>
+            <h2>NDR C Regex</h2>
+ 
+            <br>
+            <h4>1. Using the library</h4>
+            <hr>
+            The NDR_CRegex library provides the functionality to apply regular expression patterns to strings of text.
+            The regular expression patterns are compiled into a graph structure which is used for matching against any text string
+            <br><br>
+            The doxygen generated documetation for the exposed functionality of the NDR_CRegex library can be found at "NDR_CRegex/documentation/html/index.html" (open with your browser)
+            <br><br>
+            The NDR_LAP library provides 4 main functions to handle lexical analysis and parsing for compiler generation.<br>
+            <hr>
+            <ul>
+                <li><pre><b>void NDR_InitRegex(NDR_Regex* cRegex)</b> - For initializing values within the NDR_Regex struct after memory has been allocated</pre></li>
+                <li><pre><b>int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString)</b> - For compiling the struct with a given regex pattern string</pre></li>
+                <li><pre><b>NDR_MatchResult NDR_MatchRegex(NDR_Regex* cRegex, char* token)</b> - For matching the already compiled regex to a given token string</pre></li>
+                <li><pre><b>void NDR_DestroyRegex(NDR_Regex* graph)</b> - For freeing the memory allocated to the NDR_Regex struct after use</pre></li>
+            </ul>
+            <hr>
+            <br>
+            In addition to the above, there is an enum <b>"NDR_MatchResult"</b> that provides a number of options for checking the result of the "NDR_MatchRegex" function which are 
+            <hr>
+            <ul>
+                <li><pre><b>NDR_REGEX_FAILURE</b> - For checking if an error state was reached during matching</pre></li>
+                <li><pre><b>NDR_REGEX_NOMATCH</b> - For checking if the pattern was unable to match any of the token string</pre></li>
+                <li><pre><b>NDR_REGEX_PARTIALMATCH</b> - For checking if the pattern was able to match but the token string ended before the regular expression pattern</pre></li>
+                <li><pre><b>NDR_REGEX_COMPLETEMATCH</b> - For checking if the pattern was able to completely match to the end of the regular expression pattern</pre></li>
+            </ul>
+            <hr>
+            <br>
+            
+            To see how the regex patterns are designed, click the "Pattern Specifications" tab at the top of the page to see the specifications.<br>
+            To demonstrate these items in use, an example program is provided below.
+            
+            <br><br><br><h4>2. Example Program</h4>
+            <hr>
+            <pre>
+
+#include "NDR_CRegex/src/ndr_regex.h"
+
+
+int main()
+{
+    char testRegex1[] = "[ta][ec][se][ts]";
+    char testToken1[] = "test";
+    char testToken2[] = "ace";
+    
+    NDR_Regex* test1 = malloc(sizeof(NDR_Regex));
+    NDR_InitRegex(test1);
+    
+    if(NDR_CompileRegex(test1, testRegex1) != 0){
+        printf("%s\n", NDR_Regex_GetErrorMessage(test1));
+        return 1;
+    }
+    
+    if(NDR_MatchRegex(test1, testToken1) == NDR_REGEX_COMPLETEMATCH)
+        printf("1. Success\n");
+    else
+        printf("1. Fail\n");
+        
+    if(NDR_MatchRegex(test1, testToken2) == NDR_REGEX_PARTIALMATCH)
+        printf("2. Success\n");
+    else
+        printf("2. Fail\n");
+        
+    return 0;
+    
+}
+
+</pre>
+
+        </div>
+        <div id="specDiv" style="display: none;">
+            <br>
+            <h2>NDR Regex Pattern Specifications</h2>
+            <br>
+
+            To actually use regular expressions to perform text matching operations, you must first define the regular expression pattern.<br><br>
+            
+            <br>
+            <h4>1. Components of NDR Regex patterns</h4>
+            <hr>
+            
+            Below is a list of the different components and characters that can be used to create a variety of regular expression patterns<br>
+            
+            <hr>
+            <ul>
+                <li><b>$</b> - When placed as the first character in the regex pattern, will mean that the regex will only match a token if matching starts at the first character</li>
+                <li><b>%</b> - When placed as the last character in the regex pattern (without a leading escape character '\', will mean that the regex will only match a token if matching ends at the last character</li>
+                <li><b>\</b> - Is the escape character and can be used to force special characters to be used as the character itself</li>
+                <li><b>?</b> - Is a special character to mark a character, character class, or word as optional</li>
+                <li><b>*</b> - Is a special character to mark a character, character class, or word as optional or repeatable any number of times (0 - infinity)</li>
+                <li><b>+</b> - Is a special character to mark a character, character class, or word as mandatory and repeatable any number of times (1 - infinity)</li>
+                <li><b>.</b> - Is a special character to represent every possible character</li>
+                <li><b>^</b> - Is a special character that will negate everything in a character class if and only if it is the first character immediately after the opening character '[' of a character class</li>
+                <li><b>|</b> - Is a special character that allows for creating different paths for matching according to the logical "or". It must be used with parentheses enclosed words only</li>
+                <li><b>N</b> - Is a special character that must be escaped to represent everything except the '\n' newline character</li>
+                <li><b>e</b> - Is a special character that must be escaped to represent every possible character</li>
+                <li><b>E</b> - Is a special character that must be escaped to represent no character at all</li>
+                <li><b>d</b> - Is a special character that must be escaped to represent the digits</li>
+                <li><b>D</b> - Is a special character that must be escaped to represent everything that is not a decimal digit</li>
+                <li><b>s</b> - Is a special character that must be escaped to represent white space ' ' and '\t'</li>
+                <li><b>S</b> - Is a special character that must be escaped to represent everthing that is not whitespace</li>
+                <li><b>w</b> - Is a special character that must be escaped to represent word characters</li>
+                <li><b>W</b> - Is a special character that must be escaped to represent everything except forword characters</li>
+                <li><b>'['</b> and <b>']'</b> - Are special characters that create and finish character classes respectively. Everything inside of a single character class will be optional for comparison to a single character</li>
+                <li><b>'('</b> and <b>')'</b> - Are special characters that create and finish words respectively. Everything inside of a word will be treated as its own individual section of the matching pattern</li>
+            </ul>
+            In addition to these, the standard special characters of the C programming language should be treated as normal special characters such as '\n' for specifying a newline
+        </div>
+            
+
+        <div id="licenseDiv" style="display: none;">
+            <br>
+            <h2>NDR_CRegex License</h2>
+ 
+            <br>
+            <pre>BSD 3-Clause License
+
+Copyright (c) 2023, Neil Runcie
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
+        </div>
+    </div>
+
+  <script>
+      function MainDoc(){
+          var mainContent = document.getElementById("mainDiv");
+          mainContent.style.display = "block";
+          var lexContent = document.getElementById("specDiv");
+          lexContent.style.display = "none";
+          var licenseContent = document.getElementById("licenseDiv");
+          licenseContent.style.display = "none";
+      }
+      function SpecDoc(){
+          var mainContent = document.getElementById("mainDiv");
+          mainContent.style.display = "none";
+          var lexContent = document.getElementById("specDiv");
+          lexContent.style.display = "block";
+          var licenseContent = document.getElementById("licenseDiv");
+          licenseContent.style.display = "none";
+      }
+      function LicenseDoc(){
+          var mainContent = document.getElementById("mainDiv");
+          mainContent.style.display = "none";
+          var lexContent = document.getElementById("specDiv");
+          lexContent.style.display = "none";
+          var licenseContent = document.getElementById("licenseDiv");
+          licenseContent.style.display = "block";
+      }
+  </script>
+    
+</body>
