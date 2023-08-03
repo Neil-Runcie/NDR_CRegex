@@ -1294,10 +1294,12 @@ void NDR_DestroyRegexGraph(NDR_Regex* head){
     if(head->initialized == true){
         if(head != NULL){
             size_t duplicatePostDepthTrackerCount = 0;
+            size_t dupeTrackerMemoryAllocated = 50;
 
             NDR_RNodeStack* depthTracker = malloc(sizeof(NDR_RNodeStack));
             NDR_InitRNodeStack(depthTracker);
-            NDR_RegexNode** duplicateTracker = malloc(sizeof(NDR_RegexNode*) * 1000);
+            NDR_RegexNode** duplicateTracker = malloc(sizeof(NDR_RegexNode*) * dupeTrackerMemoryAllocated);
+
             NDR_RegexNode* follow = head->start;
 
             NDR_RNodeStackPush(depthTracker, follow);
@@ -1317,6 +1319,10 @@ void NDR_DestroyRegexGraph(NDR_Regex* head){
 
                 if(!NDR_RNodeDuplicate(follow, duplicateTracker, duplicatePostDepthTrackerCount)){
                     duplicateTracker[duplicatePostDepthTrackerCount++] = (follow);
+                    if(duplicatePostDepthTrackerCount >= dupeTrackerMemoryAllocated - 2){
+                        dupeTrackerMemoryAllocated = dupeTrackerMemoryAllocated * 2;
+                        duplicateTracker = realloc(duplicateTracker, sizeof(NDR_RegexNode*) * dupeTrackerMemoryAllocated);
+                    }
                 }
 
                 NDR_RNodeStackPop(depthTracker);
@@ -1336,4 +1342,28 @@ void NDR_DestroyRegexGraph(NDR_Regex* head){
         }
     }
 
+}
+
+bool NDR_Regex_IsCompiled(NDR_Regex* ndrregex){
+    return ndrregex->initialized;
+}
+
+bool NDR_Regex_HasBeginFlag(NDR_Regex* ndrregex){
+    return ndrregex->beginString;
+}
+
+bool NDR_Regex_HasEndFlag(NDR_Regex* ndrregex){
+    return ndrregex->endString;
+}
+
+bool NDR_Regex_IsEmpty(NDR_Regex* ndrregex){
+    return ndrregex->isEmpty;
+}
+
+char* NDR_Regex_GetErrorMessage(NDR_Regex* ndrregex){
+    return ndrregex->errorMessage;
+}
+
+NDR_RegexNode*  NDR_Regex_GetStartNode(NDR_Regex* ndrregex){
+    return ndrregex->start;
 }
