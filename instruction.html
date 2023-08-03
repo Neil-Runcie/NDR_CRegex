@@ -27,12 +27,18 @@
             <br>
             <h4>1. Using the library</h4>
             <hr>
-            The NDR_CRegex library provides the functionality to apply regular expression patterns to strings of text.
-            The regular expression patterns are compiled into a graph structure which is used for matching against any text string
+            The goal of this library is to provide a streamlined way to apply regular expressions to use cases that do not require the added complexity of features such as buffer size configuration, compile time options, pattern conversions, and many others.<br>
+            The inspiration behind this was creating a way to match text strings for lexical analysis within a compiler without spending unnecessary amounts of time focusing on the regular expressions rather than the compilation itself.<br><br>
+            
+            The NDR_CRegex library provides the functionality to apply regular expression patterns to strings of text.<br>
+            The regular expression patterns are compiled into a graph structure which is used for matching against any text string.<br><br>
+            
+            Note: This library does not currently support backtracking but will be updated to include backtracking in a future version.
+            
             <br><br>
             The doxygen generated documetation for the exposed functionality of the NDR_CRegex library can be found at "NDR_CRegex/documentation/html/index.html" (open with your browser)
             <br><br>
-            The NDR_LAP library provides 4 main functions to handle lexical analysis and parsing for compiler generation.<br>
+            The NDR_CRegex library provides 4 main functions to handle lexical analysis and parsing for compiler generation.<br>
             <hr>
             <ul>
                 <li><pre><b>void NDR_InitRegex(NDR_Regex* cRegex)</b> - For initializing values within the NDR_Regex struct after memory has been allocated</pre></li>
@@ -96,16 +102,16 @@ int main()
         </div>
         <div id="specDiv" style="display: none;">
             <br>
-            <h2>NDR Regex Pattern Specifications</h2>
+            <h2>NDR C Regex Pattern Specifications</h2>
             <br>
 
             To actually use regular expressions to perform text matching operations, you must first define the regular expression pattern.<br><br>
             
             <br>
-            <h4>1. Components of NDR Regex patterns</h4>
+            <h4>1. Special characters of NDR Regex patterns</h4>
             <hr>
             
-            Below is a list of the different components and characters that can be used to create a variety of regular expression patterns<br>
+            Below is a list of the different characters that can be used to create a variety of regular expression patterns<br>
             
             <hr>
             <ul>
@@ -113,10 +119,11 @@ int main()
                 <li><b>%</b> - When placed as the last character in the regex pattern (without a leading escape character '\', will mean that the regex will only match a token if matching ends at the last character</li>
                 <li><b>\</b> - Is the escape character and can be used to force special characters to be used as the character itself</li>
                 <li><b>?</b> - Is a special character to mark a character, character class, or word as optional</li>
-                <li><b>*</b> - Is a special character to mark a character, character class, or word as optional or repeatable any number of times (0 - infinity)</li>
+                <li><b>*</b> - Is a special character to mark a character, character class, or word as optional or repeatable any number of times (0 - infinity)</li>The1
                 <li><b>+</b> - Is a special character to mark a character, character class, or word as mandatory and repeatable any number of times (1 - infinity)</li>
                 <li><b>.</b> - Is a special character to represent every possible character</li>
                 <li><b>^</b> - Is a special character that will negate everything in a character class if and only if it is the first character immediately after the opening character '[' of a character class</li>
+                <li><b>-</b> - Is a special character that allows you to specify an inclusive range of characters to be allowed within a character class based on their ASCII values</li>
                 <li><b>|</b> - Is a special character that allows for creating different paths for matching according to the logical "or". It must be used with parentheses enclosed words only</li>
                 <li><b>N</b> - Is a special character that must be escaped to represent everything except the '\n' newline character</li>
                 <li><b>e</b> - Is a special character that must be escaped to represent every possible character</li>
@@ -131,9 +138,109 @@ int main()
                 <li><b>'('</b> and <b>')'</b> - Are special characters that create and finish words respectively. Everything inside of a word will be treated as its own individual section of the matching pattern</li>
             </ul>
             In addition to these, the standard special characters of the C programming language should be treated as normal special characters such as '\n' for specifying a newline
-        </div>
+        
+            To demonstrate these items, a number of examples are provided below.
             
+            <br><br><br><h4>2. Examples</h4>
+            <hr>
 
+            For the examples below, they are written as though there are strings within C which is why '\\' is needed to represent '\' within the regular expression engine.<br><br>
+    <b>1. regex pattern - "$//.*%"</b>   *
+            <ul>
+                <li>This pattern will match the first character with a '/'</li>
+                <li>The second character will also be a '/'</li>
+                <li>The next character(s) can be any character 0 to an "infinite number" of times</li>
+                <br>
+            </ul>
+        Some example strings that this pattern will match
+        <ul>
+            <li>"// C comment"</li>
+            <li>"///////" *</li>
+            <li>"//"</li>
+        </ul>
+        This regex pattern is an example of how to capture tokens similar to C style single line comments.<br>
+        *(Note: "$!!.*%" is equivalent to "$!!\\e*%" , "$!![.]*%" , "$!![^\\E]*%" , and "$!![\\e]*%")<br>
+        
+            <hr>
+    <b>2. regex pattern - "[te](asd)?t"</b>
+        <ul>
+            <li>This pattern will match the first character with either a 't' or 'e' character</li>
+            <li>the second section could optionally be "asd" exactly once or nothing at all</li>
+            <li>The next character must be a 't'</li>
+            <br>
+        </ul>
+            Some example strings that this pattern will match
+            <ul>
+                <li>"extra words easdt and more words" *</li>
+                <li>"tt"</li>
+                <li>"beginning-tasdt-end" *</li>
+            </ul>
+            *(Note: Since there no beginning anchor '$' or ending anchor '%', as long as a matching string is present within the token string a match will still be found")
+            <hr>
+    <b>3. regex pattern - "\\d[\\e][se]*[tu]"</b>
+        <ul>
+            <li>This pattern will match any digit character 0-9</li>
+            <li>the second character could be any character</li>
+            <li>the following characters can either 's' or 'e' from 0 to an "infinite" number of times</li>
+            <li>The next character must be a 't' or a 'u'</li>
+            <br>
+        </ul>
+        Some example strings that this pattern will match
+        <ul>
+            <li>"testing8 ssseet"</li>
+            <li>"8uet"</li>
+            <li>"4 u"</li>
+        </ul>
+            <hr>
+    <b>4. regex pattern - "$[^5-9]^[\\^p][^\\d]+%"</b>
+        <ul>
+            <li>The first character must be any character that is not a '5', '6', '7', '8', or '9'</li>
+            <li>the second character must be a '^'</li>
+            <li>the third character can be either a '^' or 'p'</li>
+            <li>The next characters can be anything except for a decimal digit from 1 to an "infinite" number of times</li>
+            <br>
+            
+        </ul>
+        Some example strings that this pattern will match
+        <ul>
+            <li>"r^^r"</li>
+            <li>" ^p sdf"</li>
+        </ul>
+        Some example strings that this pattern will not match
+        <ul>
+            <li>"r^g8"</li>
+            <li>"test"</li>
+        </ul>
+        <hr>
+    <b>5. regex pattern - "$[te]((asd){2,4})|((ghj)*)|(qwe)t%"</b>
+        <ul>
+            <li>This pattern will match the first character with either a 't' or 'e' character</li>
+            <li>the second section could be any of the following</li>
+            <ul>
+                <li>"asd" repeating 2 to 4 times which represents "asdasd", "asdasdasd", or "asdasdasdasd"</li>
+                <li>"ghj" repeating 0 to an infinite number of times which represents "", "ghj", "ghjghj", and so on. *</li>
+                <li>"qwe" exactly once</li>
+            </ul>
+            <li>The next character must be a 't'</li>
+            <br>
+            
+        </ul>
+        Some example strings that this pattern will match
+        <ul>
+            <li>"easdasdt"</li>
+            <li>"et" *</li>
+            <li>"eghjt"</li>
+        </ul>
+        Some example strings that this pattern will not match
+        <ul>
+            <li>"easdt"</li>
+            <li>"eqwet" *</li>
+            <li>"eqweqwet"</li>
+        </ul>
+        *(Note: optional items specified with ? or * are not recommended in an or section since an optional path will always match nothing and without backtracking, the rest of the patterns will be skipped)
+        <hr>
+    
+</div>
         <div id="licenseDiv" style="display: none;">
             <br>
             <h2>NDR_CRegex License</h2>
