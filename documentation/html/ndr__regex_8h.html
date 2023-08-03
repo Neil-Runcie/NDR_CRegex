@@ -72,7 +72,13 @@ $(function() {
 <div class="title">ndr_regex.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
+<div class="textblock"><code>#include &lt;stdbool.h&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for ndr_regex.h:</div>
+<div class="dyncontent">
+<div class="center"><img src="ndr__regex_8h__incl.png" border="0" usemap="#andr__regex_8h" alt=""/></div>
+</div>
+</div>
 <p><a href="ndr__regex_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -114,6 +120,24 @@ Functions</h2></td></tr>
 <tr class="memitem:a7b18e62d6da88bc57dd13669b7a30d7f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#a7b18e62d6da88bc57dd13669b7a30d7f">NDR_DestroyRegex</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *graph)</td></tr>
 <tr class="memdesc:a7b18e62d6da88bc57dd13669b7a30d7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the memory associated with items within the regex struct.  <a href="ndr__regex_8h.html#a7b18e62d6da88bc57dd13669b7a30d7f">More...</a><br /></td></tr>
 <tr class="separator:a7b18e62d6da88bc57dd13669b7a30d7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae461dae6cb29e621ca48d12b5ca6ebb0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#ae461dae6cb29e621ca48d12b5ca6ebb0">NDR_Regex_IsCompiled</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *ndrregex)</td></tr>
+<tr class="memdesc:ae461dae6cb29e621ca48d12b5ca6ebb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer has been compiled with a pattern.  <a href="ndr__regex_8h.html#ae461dae6cb29e621ca48d12b5ca6ebb0">More...</a><br /></td></tr>
+<tr class="separator:ae461dae6cb29e621ca48d12b5ca6ebb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac54e5b6ab71e31751345d04168171db7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#ac54e5b6ab71e31751345d04168171db7">NDR_Regex_HasBeginFlag</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *ndrregex)</td></tr>
+<tr class="memdesc:ac54e5b6ab71e31751345d04168171db7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer expects to match starting only from the first character in the token string due to anchor in regex pattern.  <a href="ndr__regex_8h.html#ac54e5b6ab71e31751345d04168171db7">More...</a><br /></td></tr>
+<tr class="separator:ac54e5b6ab71e31751345d04168171db7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00c0a8056ed1a2f6d6a8662f2efe2532"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#a00c0a8056ed1a2f6d6a8662f2efe2532">NDR_Regex_HasEndFlag</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *ndrregex)</td></tr>
+<tr class="memdesc:a00c0a8056ed1a2f6d6a8662f2efe2532"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer expects to match exactly to the last character in the token string due to anchor in regex pattern.  <a href="ndr__regex_8h.html#a00c0a8056ed1a2f6d6a8662f2efe2532">More...</a><br /></td></tr>
+<tr class="separator:a00c0a8056ed1a2f6d6a8662f2efe2532"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d30820455b5ac7da84a5e0fa4849c10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#a6d30820455b5ac7da84a5e0fa4849c10">NDR_Regex_IsEmpty</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *ndrregex)</td></tr>
+<tr class="memdesc:a6d30820455b5ac7da84a5e0fa4849c10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer was compiled with an empty regex pattern string.  <a href="ndr__regex_8h.html#a6d30820455b5ac7da84a5e0fa4849c10">More...</a><br /></td></tr>
+<tr class="separator:a6d30820455b5ac7da84a5e0fa4849c10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7e09dd0c6618cb7e6b5432f925b48cd0"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#a7e09dd0c6618cb7e6b5432f925b48cd0">NDR_Regex_GetErrorMessage</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *ndrregex)</td></tr>
+<tr class="memdesc:a7e09dd0c6618cb7e6b5432f925b48cd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the message describing what happened during compilation if an error occured.  <a href="ndr__regex_8h.html#a7e09dd0c6618cb7e6b5432f925b48cd0">More...</a><br /></td></tr>
+<tr class="separator:a7e09dd0c6618cb7e6b5432f925b48cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae72f9ec7262b93f1a41c39ada20710a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structNDR__RegexNode.html">NDR_RegexNode</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ndr__regex_8h.html#ae72f9ec7262b93f1a41c39ada20710a2">NDR_Regex_GetStartNode</a> (<a class="el" href="structNDR__Regex.html">NDR_Regex</a> *ndrregex)</td></tr>
+<tr class="memdesc:ae72f9ec7262b93f1a41c39ada20710a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the start node of the graph used for regex comparison.  <a href="ndr__regex_8h.html#ae72f9ec7262b93f1a41c39ada20710a2">More...</a><br /></td></tr>
+<tr class="separator:ae72f9ec7262b93f1a41c39ada20710a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a8528b9fb4b54088828046caefbea02f2"></a>
@@ -181,7 +205,7 @@ Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ae4d62f3606864d7ab2410fbd1a9109f9ad31d8ba3269b7e7ca95c93db984c793a"></a>NDR_REGEX_COMPLETEMATCH&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="ndr__regex_8h_source.html#l00046">46</a> of file <a class="el" href="ndr__regex_8h_source.html">ndr_regex.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ndr__regex_8h_source.html#l00047">47</a> of file <a class="el" href="ndr__regex_8h_source.html">ndr_regex.h</a>.</p>
 
 </div>
 </div>
@@ -311,6 +335,168 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The result of the match </dd></dl>
+
+</div>
+</div>
+<a id="a7e09dd0c6618cb7e6b5432f925b48cd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e09dd0c6618cb7e6b5432f925b48cd0">&#9670;&nbsp;</a></span>NDR_Regex_GetErrorMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* NDR_Regex_GetErrorMessage </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structNDR__Regex.html">NDR_Regex</a> *&#160;</td>
+          <td class="paramname"><em>ndrregex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the message describing what happened during compilation if an error occured. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ndrregex</td><td>is a <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer that has had memory assigned to it and has been used with the NDR_InitRegex function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the error message string </dd></dl>
+
+</div>
+</div>
+<a id="ae72f9ec7262b93f1a41c39ada20710a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae72f9ec7262b93f1a41c39ada20710a2">&#9670;&nbsp;</a></span>NDR_Regex_GetStartNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structNDR__RegexNode.html">NDR_RegexNode</a>* NDR_Regex_GetStartNode </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structNDR__Regex.html">NDR_Regex</a> *&#160;</td>
+          <td class="paramname"><em>ndrregex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the start node of the graph used for regex comparison. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ndrregex</td><td>is a <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer that has had memory assigned to it and has been used with the NDR_InitRegex function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the start node of the graph used for regex comparison </dd></dl>
+
+</div>
+</div>
+<a id="ac54e5b6ab71e31751345d04168171db7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac54e5b6ab71e31751345d04168171db7">&#9670;&nbsp;</a></span>NDR_Regex_HasBeginFlag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NDR_Regex_HasBeginFlag </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structNDR__Regex.html">NDR_Regex</a> *&#160;</td>
+          <td class="paramname"><em>ndrregex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer expects to match starting only from the first character in the token string due to anchor in regex pattern. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ndrregex</td><td>is a <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer that has had memory assigned to it and has been used with the NDR_InitRegex function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true or false value of whether or the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer expects to match starting only from the first character in the token string due to anchor in regex pattern </dd></dl>
+
+</div>
+</div>
+<a id="a00c0a8056ed1a2f6d6a8662f2efe2532"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00c0a8056ed1a2f6d6a8662f2efe2532">&#9670;&nbsp;</a></span>NDR_Regex_HasEndFlag()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NDR_Regex_HasEndFlag </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structNDR__Regex.html">NDR_Regex</a> *&#160;</td>
+          <td class="paramname"><em>ndrregex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer expects to match exactly to the last character in the token string due to anchor in regex pattern. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ndrregex</td><td>is a <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer that has had memory assigned to it and has been used with the NDR_InitRegex function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true or false value of whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer expects to match exactly to the last character in the token string due to anchor in regex pattern </dd></dl>
+
+</div>
+</div>
+<a id="ae461dae6cb29e621ca48d12b5ca6ebb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae461dae6cb29e621ca48d12b5ca6ebb0">&#9670;&nbsp;</a></span>NDR_Regex_IsCompiled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NDR_Regex_IsCompiled </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structNDR__Regex.html">NDR_Regex</a> *&#160;</td>
+          <td class="paramname"><em>ndrregex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer has been compiled with a pattern. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ndrregex</td><td>is a <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer that has had memory assigned to it and has been used with the NDR_InitRegex function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true or false value of whether or not compilation has been performed successfully </dd></dl>
+
+</div>
+</div>
+<a id="a6d30820455b5ac7da84a5e0fa4849c10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d30820455b5ac7da84a5e0fa4849c10">&#9670;&nbsp;</a></span>NDR_Regex_IsEmpty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NDR_Regex_IsEmpty </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structNDR__Regex.html">NDR_Regex</a> *&#160;</td>
+          <td class="paramname"><em>ndrregex</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer was compiled with an empty regex pattern string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ndrregex</td><td>is a <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer that has had memory assigned to it and has been used with the NDR_InitRegex function </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true or false value of whether or not the <a class="el" href="structNDR__Regex.html" title="The regex struct provides the pattern matching functionality required for matching regular expression...">NDR_Regex</a> pointer was compiled with an empty regex pattern string </dd></dl>
 
 </div>
 </div>

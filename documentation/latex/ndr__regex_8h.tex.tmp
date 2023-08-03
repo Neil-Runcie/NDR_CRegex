@@ -1,0 +1,292 @@
+\hypertarget{ndr__regex_8h}{}\doxysection{ndr\+\_\+regex.\+h File Reference}
+\label{ndr__regex_8h}\index{ndr\_regex.h@{ndr\_regex.h}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+Include dependency graph for ndr\+\_\+regex.\+h\+:
+% FIG 0
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}}
+\begin{DoxyCompactList}\small\item\em The regex struct provides the pattern matching functionality required for matching regular expressions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}} \mbox{\hyperlink{ndr__regex_8h_a8528b9fb4b54088828046caefbea02f2}{NDR\+\_\+\+Match\+Result}}
+\item 
+typedef struct \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}} \mbox{\hyperlink{ndr__regex_8h_a76b40b7eed027a25b7c65f2f89af45cb}{NDR\+\_\+\+Regex\+Node}}
+\item 
+typedef struct \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} \mbox{\hyperlink{ndr__regex_8h_af789b3e5ff83ed517196280feeb5a4f6}{NDR\+\_\+\+Regex}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}} \{ \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9af134f2ba86c12004f3023aad63ffb24c}{NDR\+\_\+\+REGEX\+\_\+\+FAILURE}}
+, \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9a6380af984f94022270360aaab6f67ce0}{NDR\+\_\+\+REGEX\+\_\+\+NOMATCH}}
+, \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9a86d42521c7c7452270e4fdf6292997f3}{NDR\+\_\+\+REGEX\+\_\+\+PARTIALMATCH}}
+, \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9ad31d8ba3269b7e7ca95c93db984c793a}{NDR\+\_\+\+REGEX\+\_\+\+COMPLETEMATCH}}
+ \}
+\begin{DoxyCompactList}\small\item\em Provides codes for the result of the regex matching process. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{ndr__regex_8h_a97cfff5bf6eb0643cd250e84e1bae469}{NDR\+\_\+\+Init\+Regex}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$c\+Regex)
+\begin{DoxyCompactList}\small\item\em Initialize the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} structure that will be used for regular expression comparision. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{ndr__regex_8h_a581c50169d16091bded174267d590b39}{NDR\+\_\+\+Compile\+Regex}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$c\+Regex, char $\ast$regex\+String)
+\begin{DoxyCompactList}\small\item\em Based on a provided regex string, create a reference graph for later matching the regex to other strings. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}} \mbox{\hyperlink{ndr__regex_8h_abb9fc5686cb2e0b8a08adc8a3fddcd5e}{NDR\+\_\+\+Match\+Regex}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$c\+Regex, char $\ast$token)
+\begin{DoxyCompactList}\small\item\em Compare a string to a pre-\/compiled regex graph. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{ndr__regex_8h_a7b18e62d6da88bc57dd13669b7a30d7f}{NDR\+\_\+\+Destroy\+Regex}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$graph)
+\begin{DoxyCompactList}\small\item\em Free the memory associated with items within the regex struct. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{ndr__regex_8h_ae461dae6cb29e621ca48d12b5ca6ebb0}{NDR\+\_\+\+Regex\+\_\+\+Is\+Compiled}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$ndrregex)
+\begin{DoxyCompactList}\small\item\em Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer has been compiled with a pattern. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{ndr__regex_8h_ac54e5b6ab71e31751345d04168171db7}{NDR\+\_\+\+Regex\+\_\+\+Has\+Begin\+Flag}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$ndrregex)
+\begin{DoxyCompactList}\small\item\em Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer expects to match starting only from the first character in the token string due to anchor in regex pattern. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{ndr__regex_8h_a00c0a8056ed1a2f6d6a8662f2efe2532}{NDR\+\_\+\+Regex\+\_\+\+Has\+End\+Flag}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$ndrregex)
+\begin{DoxyCompactList}\small\item\em Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer expects to match exactly to the last character in the token string due to anchor in regex pattern. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{ndr__regex_8h_a6d30820455b5ac7da84a5e0fa4849c10}{NDR\+\_\+\+Regex\+\_\+\+Is\+Empty}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$ndrregex)
+\begin{DoxyCompactList}\small\item\em Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer was compiled with an empty regex pattern string. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{ndr__regex_8h_a7e09dd0c6618cb7e6b5432f925b48cd0}{NDR\+\_\+\+Regex\+\_\+\+Get\+Error\+Message}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$ndrregex)
+\begin{DoxyCompactList}\small\item\em Get the message describing what happened during compilation if an error occured. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}} $\ast$ \mbox{\hyperlink{ndr__regex_8h_ae72f9ec7262b93f1a41c39ada20710a2}{NDR\+\_\+\+Regex\+\_\+\+Get\+Start\+Node}} (\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$ndrregex)
+\begin{DoxyCompactList}\small\item\em Get the start node of the graph used for regex comparison. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{ndr__regex_8h_a8528b9fb4b54088828046caefbea02f2}\label{ndr__regex_8h_a8528b9fb4b54088828046caefbea02f2}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_MatchResult@{NDR\_MatchResult}}
+\index{NDR\_MatchResult@{NDR\_MatchResult}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_MatchResult}{NDR\_MatchResult}}
+{\footnotesize\ttfamily typedef enum \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}} \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}}}
+
+\mbox{\Hypertarget{ndr__regex_8h_af789b3e5ff83ed517196280feeb5a4f6}\label{ndr__regex_8h_af789b3e5ff83ed517196280feeb5a4f6}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex@{NDR\_Regex}}
+\index{NDR\_Regex@{NDR\_Regex}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex}{NDR\_Regex}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}}}
+
+\mbox{\Hypertarget{ndr__regex_8h_a76b40b7eed027a25b7c65f2f89af45cb}\label{ndr__regex_8h_a76b40b7eed027a25b7c65f2f89af45cb}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_RegexNode@{NDR\_RegexNode}}
+\index{NDR\_RegexNode@{NDR\_RegexNode}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_RegexNode}{NDR\_RegexNode}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}} \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}}}
+
+
+
+Definition at line 1 of file ndr\+\_\+regex.\+h.
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}\label{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_MatchResult@{NDR\_MatchResult}}
+\index{NDR\_MatchResult@{NDR\_MatchResult}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_MatchResult}{NDR\_MatchResult}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}}}
+
+
+
+Provides codes for the result of the regex matching process. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NDR\_REGEX\_FAILURE@{NDR\_REGEX\_FAILURE}!ndr\_regex.h@{ndr\_regex.h}}\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_REGEX\_FAILURE@{NDR\_REGEX\_FAILURE}}}\mbox{\Hypertarget{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9af134f2ba86c12004f3023aad63ffb24c}\label{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9af134f2ba86c12004f3023aad63ffb24c}} 
+NDR\+\_\+\+REGEX\+\_\+\+FAILURE&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NDR\_REGEX\_NOMATCH@{NDR\_REGEX\_NOMATCH}!ndr\_regex.h@{ndr\_regex.h}}\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_REGEX\_NOMATCH@{NDR\_REGEX\_NOMATCH}}}\mbox{\Hypertarget{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9a6380af984f94022270360aaab6f67ce0}\label{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9a6380af984f94022270360aaab6f67ce0}} 
+NDR\+\_\+\+REGEX\+\_\+\+NOMATCH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NDR\_REGEX\_PARTIALMATCH@{NDR\_REGEX\_PARTIALMATCH}!ndr\_regex.h@{ndr\_regex.h}}\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_REGEX\_PARTIALMATCH@{NDR\_REGEX\_PARTIALMATCH}}}\mbox{\Hypertarget{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9a86d42521c7c7452270e4fdf6292997f3}\label{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9a86d42521c7c7452270e4fdf6292997f3}} 
+NDR\+\_\+\+REGEX\+\_\+\+PARTIALMATCH&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{NDR\_REGEX\_COMPLETEMATCH@{NDR\_REGEX\_COMPLETEMATCH}!ndr\_regex.h@{ndr\_regex.h}}\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_REGEX\_COMPLETEMATCH@{NDR\_REGEX\_COMPLETEMATCH}}}\mbox{\Hypertarget{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9ad31d8ba3269b7e7ca95c93db984c793a}\label{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9ad31d8ba3269b7e7ca95c93db984c793a}} 
+NDR\+\_\+\+REGEX\+\_\+\+COMPLETEMATCH&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 47 of file ndr\+\_\+regex.\+h.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{ndr__regex_8h_a581c50169d16091bded174267d590b39}\label{ndr__regex_8h_a581c50169d16091bded174267d590b39}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_CompileRegex@{NDR\_CompileRegex}}
+\index{NDR\_CompileRegex@{NDR\_CompileRegex}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_CompileRegex()}{NDR\_CompileRegex()}}
+{\footnotesize\ttfamily int NDR\+\_\+\+Compile\+Regex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{c\+Regex,  }\item[{char $\ast$}]{regex\+String }\end{DoxyParamCaption})}
+
+
+
+Based on a provided regex string, create a reference graph for later matching the regex to other strings. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c\+Regex} & is an \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer with sufficient memory already allocated \\
+\hline
+{\em regex\+String} & is the regex pattern that will be used to create the regex graph \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The success status of the function. 0 for success and non-\/zero for error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_a7b18e62d6da88bc57dd13669b7a30d7f}\label{ndr__regex_8h_a7b18e62d6da88bc57dd13669b7a30d7f}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_DestroyRegex@{NDR\_DestroyRegex}}
+\index{NDR\_DestroyRegex@{NDR\_DestroyRegex}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_DestroyRegex()}{NDR\_DestroyRegex()}}
+{\footnotesize\ttfamily void NDR\+\_\+\+Destroy\+Regex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{graph }\end{DoxyParamCaption})}
+
+
+
+Free the memory associated with items within the regex struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em graph} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it for compilation \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{ndr__regex_8h_a97cfff5bf6eb0643cd250e84e1bae469}\label{ndr__regex_8h_a97cfff5bf6eb0643cd250e84e1bae469}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_InitRegex@{NDR\_InitRegex}}
+\index{NDR\_InitRegex@{NDR\_InitRegex}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_InitRegex()}{NDR\_InitRegex()}}
+{\footnotesize\ttfamily void NDR\+\_\+\+Init\+Regex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{c\+Regex }\end{DoxyParamCaption})}
+
+
+
+Initialize the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} structure that will be used for regular expression comparision. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c\+Regex} & is an \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer with sufficient memory already allocated \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{ndr__regex_8h_abb9fc5686cb2e0b8a08adc8a3fddcd5e}\label{ndr__regex_8h_abb9fc5686cb2e0b8a08adc8a3fddcd5e}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_MatchRegex@{NDR\_MatchRegex}}
+\index{NDR\_MatchRegex@{NDR\_MatchRegex}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_MatchRegex()}{NDR\_MatchRegex()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{ndr__regex_8h_ae4d62f3606864d7ab2410fbd1a9109f9}{NDR\+\_\+\+Match\+Result}} NDR\+\_\+\+Match\+Regex (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{c\+Regex,  }\item[{char $\ast$}]{token }\end{DoxyParamCaption})}
+
+
+
+Compare a string to a pre-\/compiled regex graph. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em c\+Regex} & is an \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer with sufficient memory already allocated that has been used previously in the NDR\+\_\+\+Compile\+Regex function \\
+\hline
+{\em token} & is the string that will be compared to the compiled regex graph \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The result of the match 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_a7e09dd0c6618cb7e6b5432f925b48cd0}\label{ndr__regex_8h_a7e09dd0c6618cb7e6b5432f925b48cd0}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex\_GetErrorMessage@{NDR\_Regex\_GetErrorMessage}}
+\index{NDR\_Regex\_GetErrorMessage@{NDR\_Regex\_GetErrorMessage}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex\_GetErrorMessage()}{NDR\_Regex\_GetErrorMessage()}}
+{\footnotesize\ttfamily char$\ast$ NDR\+\_\+\+Regex\+\_\+\+Get\+Error\+Message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{ndrregex }\end{DoxyParamCaption})}
+
+
+
+Get the message describing what happened during compilation if an error occured. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ndrregex} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it and has been used with the NDR\+\_\+\+Init\+Regex function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the error message string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_ae72f9ec7262b93f1a41c39ada20710a2}\label{ndr__regex_8h_ae72f9ec7262b93f1a41c39ada20710a2}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex\_GetStartNode@{NDR\_Regex\_GetStartNode}}
+\index{NDR\_Regex\_GetStartNode@{NDR\_Regex\_GetStartNode}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex\_GetStartNode()}{NDR\_Regex\_GetStartNode()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structNDR__RegexNode}{NDR\+\_\+\+Regex\+Node}}$\ast$ NDR\+\_\+\+Regex\+\_\+\+Get\+Start\+Node (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{ndrregex }\end{DoxyParamCaption})}
+
+
+
+Get the start node of the graph used for regex comparison. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ndrregex} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it and has been used with the NDR\+\_\+\+Init\+Regex function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the start node of the graph used for regex comparison 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_ac54e5b6ab71e31751345d04168171db7}\label{ndr__regex_8h_ac54e5b6ab71e31751345d04168171db7}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex\_HasBeginFlag@{NDR\_Regex\_HasBeginFlag}}
+\index{NDR\_Regex\_HasBeginFlag@{NDR\_Regex\_HasBeginFlag}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex\_HasBeginFlag()}{NDR\_Regex\_HasBeginFlag()}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+\_\+\+Has\+Begin\+Flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{ndrregex }\end{DoxyParamCaption})}
+
+
+
+Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer expects to match starting only from the first character in the token string due to anchor in regex pattern. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ndrregex} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it and has been used with the NDR\+\_\+\+Init\+Regex function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false value of whether or the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer expects to match starting only from the first character in the token string due to anchor in regex pattern 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_a00c0a8056ed1a2f6d6a8662f2efe2532}\label{ndr__regex_8h_a00c0a8056ed1a2f6d6a8662f2efe2532}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex\_HasEndFlag@{NDR\_Regex\_HasEndFlag}}
+\index{NDR\_Regex\_HasEndFlag@{NDR\_Regex\_HasEndFlag}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex\_HasEndFlag()}{NDR\_Regex\_HasEndFlag()}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+\_\+\+Has\+End\+Flag (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{ndrregex }\end{DoxyParamCaption})}
+
+
+
+Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer expects to match exactly to the last character in the token string due to anchor in regex pattern. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ndrregex} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it and has been used with the NDR\+\_\+\+Init\+Regex function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false value of whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer expects to match exactly to the last character in the token string due to anchor in regex pattern 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_ae461dae6cb29e621ca48d12b5ca6ebb0}\label{ndr__regex_8h_ae461dae6cb29e621ca48d12b5ca6ebb0}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex\_IsCompiled@{NDR\_Regex\_IsCompiled}}
+\index{NDR\_Regex\_IsCompiled@{NDR\_Regex\_IsCompiled}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex\_IsCompiled()}{NDR\_Regex\_IsCompiled()}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+\_\+\+Is\+Compiled (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{ndrregex }\end{DoxyParamCaption})}
+
+
+
+Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer has been compiled with a pattern. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ndrregex} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it and has been used with the NDR\+\_\+\+Init\+Regex function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false value of whether or not compilation has been performed successfully 
+\end{DoxyReturn}
+\mbox{\Hypertarget{ndr__regex_8h_a6d30820455b5ac7da84a5e0fa4849c10}\label{ndr__regex_8h_a6d30820455b5ac7da84a5e0fa4849c10}} 
+\index{ndr\_regex.h@{ndr\_regex.h}!NDR\_Regex\_IsEmpty@{NDR\_Regex\_IsEmpty}}
+\index{NDR\_Regex\_IsEmpty@{NDR\_Regex\_IsEmpty}!ndr\_regex.h@{ndr\_regex.h}}
+\doxysubsubsection{\texorpdfstring{NDR\_Regex\_IsEmpty()}{NDR\_Regex\_IsEmpty()}}
+{\footnotesize\ttfamily bool NDR\+\_\+\+Regex\+\_\+\+Is\+Empty (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} $\ast$}]{ndrregex }\end{DoxyParamCaption})}
+
+
+
+Get whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer was compiled with an empty regex pattern string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ndrregex} & is a \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer that has had memory assigned to it and has been used with the NDR\+\_\+\+Init\+Regex function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true or false value of whether or not the \mbox{\hyperlink{structNDR__Regex}{NDR\+\_\+\+Regex}} pointer was compiled with an empty regex pattern string 
+\end{DoxyReturn}
