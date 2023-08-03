@@ -4,7 +4,9 @@
 NDR_CRegex is a library for straightforward regular expression matching in C.
 
 The inspiration for the NDR_CRegex library was the need for an easy to use tool for text matching within a lexical analysis tool without getting distracted by all of the options that more sophisticated regular expression engines proved.
+
 With that being said, this library is to be used when the use case for regular expressions is not too complex and therefore a simpler and easier to pick up tool is worth the tradeoff.
+
 Lastly, this regular expression engine does not currently support back tracking which can be important within certain applications but it will in the future.
 
 ## How To Use
