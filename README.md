@@ -3,7 +3,7 @@
 ## Purpose
 NDR_CRegex is a library for straightforward regular expression matching in C.
 
-The inspiration for the NDR_CRegex library was the need for an easy to use tool for text matching within a lexical analysis tool without getting distracted by all of the options that more sophisticated regular expression engines proved.
+The inspiration for the NDR_CRegex library was the need for an easy to use tool for text matching within a lexical analysis tool without getting distracted by all of the options that more sophisticated regular expression engines provide.
 
 With that being said, this library is to be used when the use case for regular expressions is not too complex and therefore a simpler and easier to pick up tool is worth the tradeoff.
 
