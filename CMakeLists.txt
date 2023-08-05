@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(NDR_LAP
+project(NDR_CRegex
     VERSION 0.1.1
     DESCRIPTION "NDR C Regex"
     LANGUAGES C)
