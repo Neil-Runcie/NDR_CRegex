@@ -21,7 +21,7 @@ TARGET_INCLUDE_DIRECTORIES(ndr_cregex PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 configure_file(${CMAKE_SOURCE_DIR}/src/ndr_regex.h ${CMAKE_SOURCE_DIR}/include/ndr_regex.h)
 
-install (TARGET ndr_cregex
+install (TARGETS ndr_cregex
          ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}
          LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}
          RUNTIME DESTINATION ${CMAKE_SOURCE_DIR})
