@@ -18,6 +18,6 @@ add_library(ndr_cregex STATIC src/ndr_regex.c src/ndr_regextracker.c src/ndr_reg
 configure_file(${CMAKE_SOURCE_DIR}/src/ndr_regex.h ${CMAKE_SOURCE_DIR}/include/ndr_regex.h)
 
 install (TARGETS ndr_cregex
-         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-         RUNTIME DESTINATION bin)
+         ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}/lib
+         LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}/lib
+         RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/bin)
