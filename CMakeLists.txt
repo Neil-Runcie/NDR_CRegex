@@ -22,12 +22,8 @@ TARGET_INCLUDE_DIRECTORIES(ndr_cregex PUBLIC ${CMAKE_SOURCE_DIR}/include)
 configure_file(${CMAKE_SOURCE_DIR}/src/ndr_regex.h ${CMAKE_SOURCE_DIR}/include/ndr_regex.h)
 
 install (TARGETS ndr_cregex
-         ARCHIVE DESTINATION ${CMAKE_SOURCE_DIR}
-         LIBRARY DESTINATION ${CMAKE_SOURCE_DIR}
-         RUNTIME DESTINATION ${CMAKE_SOURCE_DIR})
-         
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/include/ndr_regex.h DESTINATION ${CMAKE_SOURCE_DIR}/include)
+         ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
+         LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+         RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-add_custom_command(TARGET ndr_cregex POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${CMAKE_SOURCE_DIR}/include/ndr_regex.h ${CMAKE_SOURCE_DIR}/lib/)
+
