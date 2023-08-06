@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 INCLUDE(GNUInstallDirs)
 
 project(NDR_CRegex
-    VERSION 0.1.1
+    VERSION 0.1.0
     DESCRIPTION "NDR C Regex"
     LANGUAGES C)
 
@@ -17,11 +17,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 add_library(ndr_cregex STATIC src/ndr_regex.c src/ndr_regextracker.c src/ndr_regexnode.c)
 
 TARGET_INCLUDE_DIRECTORIES(ndr_cregex PUBLIC ${CMAKE_SOURCE_DIR}/lib)
-TARGET_INCLUDE_DIRECTORIES(ndr_cregex PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 configure_file(${CMAKE_SOURCE_DIR}/src/ndr_regex.h ${CMAKE_SOURCE_DIR}/include/ndr_regex.h)
 
-install (TARGETS ndr_cregex
+install(TARGETS ndr_cregex
          ARCHIVE DESTINATION ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
          LIBRARY DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
          RUNTIME DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
