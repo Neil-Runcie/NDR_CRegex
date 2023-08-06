@@ -540,7 +540,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
 
                     }
                     else if(regexString[x] == '.'){
-                        NDR_RNodeStackPeek(endStack)->everything = true;
+                        NDR_RNodeStackPeek(endStack)->allButNewLine = true;
                     }
                     else
                         NDR_AddRNodeChar(NDR_RNodeStackPeek(endStack), regexString[x]);
@@ -568,7 +568,7 @@ int NDR_CompileRegex(NDR_Regex* cRegex, char* regexString){
                     }
                 }
                 else if(regexString[x] == '.'){
-                    NDR_RNodeStackPeek(endStack)->everything = true;
+                    NDR_RNodeStackPeek(endStack)->allButNewLine = true;
                 }
                 else{
                     NDR_AddRNodeChar(NDR_RNodeStackPeek(endStack), regexString[x]);
