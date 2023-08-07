@@ -72,15 +72,20 @@ bool NDR_TrackerStackIsEmpty(NDR_TrackerStack* ndrstack) {
 
 // Utility function to add an element `x` to the stack
 void NDR_TrackerStackPush(NDR_TrackerStack* ndrstack, NDR_RegexTracker* node){
+    // Allocate memory if needed and keep track of it
     if(ndrstack->numNodes > ndrstack->memoryAllocated - 5){
         ndrstack->memoryAllocated = ndrstack->memoryAllocated * 2;
         ndrstack->references = realloc(ndrstack->references, sizeof(NDR_RegexTracker*) * ndrstack->memoryAllocated);
     }
+    // Allocate memory if needed and keep track of it for later removal of allocated memory
     if(ndrstack->numNodes > ndrstack->disposalMemoryAllocated - 5){
         ndrstack->disposalMemoryAllocated = ndrstack->disposalMemoryAllocated * 2;
         ndrstack->references = realloc(ndrstack->references, sizeof(NDR_RegexTracker*) * ndrstack->disposalMemoryAllocated);
     }
+    // add the node to the stack
     ndrstack->references[ndrstack->numNodes++] = node;
+
+    // If the node is unique then add it to the disposal array
     bool check = false;
     for(int x = 0; x < ndrstack->numDisposalNodes; x++){
         if(ndrstack->disposal[x] == node){
